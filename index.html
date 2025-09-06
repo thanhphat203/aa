@@ -1,128 +1,278 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web Xem Phim - Sử dụng API phimapi.com</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Web Xem Phim Đỉnh Nóc - phimapi.com 2025</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
-        body { font-family: Arial, sans-serif; background: #121212; color: #fff; margin: 0; padding: 20px; }
-        .movie-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
-        .movie-item { cursor: pointer; text-align: center; }
-        .movie-item img { width: 100%; height: auto; border-radius: 8px; }
-        .movie-detail { display: none; margin-top: 20px; }
-        .player { width: 100%; height: 500px; }
-        #search { margin-bottom: 20px; padding: 10px; width: 100%; max-width: 400px; }
+        body { background-color: #111827; color: white; }
+        .loading { display: none; text-align: center; margin-top: 20px; }
+        .skeleton { background: gray; height: 300px; border-radius: 8px; }
     </style>
 </head>
-<body>
-    <h1>Danh Sách Phim Mới Cập Nhật</h1>
-    <input type="text" id="search" placeholder="Tìm kiếm phim...">
-    <div class="movie-list" id="movieList"></div>
-    <div class="movie-detail" id="movieDetail">
-        <h2 id="movieTitle"></h2>
-        <p id="movieDesc"></p>
-        <div id="episodeList"></div>
-        <iframe id="playerIframe" class="player" allowfullscreen></iframe>
-        <button onclick="closeDetail()">Đóng</button>
+<body class="p-4">
+    <header class="text-center mb-8">
+        <h1 class="text-4xl font-bold">Web Xem Phim Siêu Mượt 2025</h1>
+        <p class="text-gray-400">Sử dụng API phimapi.com - Full Filter</p>
+    </header>
+
+    <!-- Tìm kiếm & Filter -->
+    <div class="flex flex-wrap gap-4 mb-8 justify-center">
+        <input id="searchInput" type="text" placeholder="Tìm phim..." class="p-2 bg-gray-800 border border-gray-600 rounded text-white w-64" />
+        <select id="genreSelect" class="p-2 bg-gray-800 border border-gray-600 rounded text-white">
+            <option value="">Thể loại</option>
+        </select>
+        <select id="countrySelect" class="p-2 bg-gray-800 border border-gray-600 rounded text-white">
+            <option value="">Quốc gia</option>
+        </select>
+        <select id="yearSelect" class="p-2 bg-gray-800 border border-gray-600 rounded text-white">
+            <option value="">Năm</option>
+        </select>
+        <select id="sortFieldSelect" class="p-2 bg-gray-800 border border-gray-600 rounded text-white">
+            <option value="">Sắp xếp theo</option>
+            <option value="modified.time">Mới cập nhật</option>
+            <option value="_id">ID</option>
+            <option value="year">Năm</option>
+        </select>
+        <select id="sortTypeSelect" class="p-2 bg-gray-800 border border-gray-600 rounded text-white">
+            <option value="desc">Giảm dần</option>
+            <option value="asc">Tăng dần</option>
+        </select>
+        <select id="sortLangSelect" class="p-2 bg-gray-800 border border-gray-600 rounded text-white">
+            <option value="">Ngôn ngữ</option>
+            <option value="vietsub">Vietsub</option>
+            <option value="thuyet-minh">Thuyết minh</option>
+            <option value="long-tieng">Lồng tiếng</option>
+        </select>
+        <button onclick="fetchMovies(1)" class="bg-blue-600 p-2 rounded hover:bg-blue-700">Tìm</button>
+    </div>
+
+    <!-- Danh sách phim -->
+    <div id="movieList" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4"></div>
+    <div id="loading" class="loading">Đang load...</div>
+
+    <!-- Pagination -->
+    <div class="flex justify-center mt-8 gap-4">
+        <button id="prevBtn" onclick="changePage(-1)" class="bg-gray-700 p-2 rounded disabled:opacity-50">Trước</button>
+        <span id="pageInfo" class="p-2">Trang 1</span>
+        <button id="nextBtn" onclick="changePage(1)" class="bg-gray-700 p-2 rounded">Sau</button>
+    </div>
+
+    <!-- Modal chi tiết phim -->
+    <div id="movieModal" class="fixed inset-0 bg-black bg-opacity-80 hidden flex items-center justify-center z-50">
+        <div class="bg-gray-900 p-6 rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <h2 id="movieTitle" class="text-2xl font-bold mb-4"></h2>
+            <p id="movieDesc" class="mb-4"></p>
+            <div id="episodeList" class="mb-4 flex flex-wrap gap-2"></div>
+            <div id="player" class="mb-4 aspect-video"></div>
+            <button onclick="closeModal()" class="bg-red-600 p-2 rounded">Đóng</button>
+        </div>
     </div>
 
     <script>
         const API_BASE = 'https://phimapi.com/';
-        
-        // Lấy danh sách phim mới
-        async function fetchMovies(page = 1) {
+        let currentPage = 1;
+        let totalPages = 1;
+        let currentParams = new URLSearchParams();
+
+        // Load thể loại
+        async function loadGenres() {
             try {
-                const res = await fetch(`${API_BASE}danh-sach/phim-moi-cap-nhat?page=${page}`);
+                const res = await fetch(`${API_BASE}the-loai`);
                 const data = await res.json();
-                displayMovies(data.items);
-            } catch (err) {
-                console.error('Lỗi fetch:', err);
+                const select = document.getElementById('genreSelect');
+                data.forEach(genre => { // Ảnh cho thấy array trực tiếp
+                    const opt = document.createElement('option');
+                    opt.value = genre.slug;
+                    opt.textContent = genre.name;
+                    select.appendChild(opt);
+                });
+            } catch (err) {}
+        }
+
+        // Load quốc gia
+        async function loadCountries() {
+            try {
+                const res = await fetch(`${API_BASE}quoc-gia`);
+                const data = await res.json();
+                const select = document.getElementById('countrySelect');
+                data.forEach(country => {
+                    const opt = document.createElement('option');
+                    opt.value = country.slug;
+                    opt.textContent = country.name;
+                    select.appendChild(opt);
+                });
+            } catch (err) {}
+        }
+
+        // Load năm
+        function loadYears() {
+            const select = document.getElementById('yearSelect');
+            const currentYear = new Date().getFullYear() + 1;
+            for (let y = currentYear; y >= 1970; y--) {
+                const opt = document.createElement('option');
+                opt.value = y;
+                opt.textContent = y;
+                select.appendChild(opt);
             }
         }
-        
-        // Hiển thị danh sách phim
+
+        // Fetch với timeout
+        async function fetchWithTimeout(url, timeout = 10000) {
+            const controller = new AbortController();
+            const id = setTimeout(() => controller.abort(), timeout);
+            try {
+                const res = await fetch(url, { signal: controller.signal });
+                clearTimeout(id);
+                if (!res.ok) throw new Error('API error');
+                return await res.json();
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        // Fetch phim
+        async function fetchMovies(page) {
+            document.getElementById('loading').style.display = 'block';
+            const query = document.getElementById('searchInput').value;
+            const genre = document.getElementById('genreSelect').value;
+            const country = document.getElementById('countrySelect').value;
+            const year = document.getElementById('yearSelect').value;
+            const sortField = document.getElementById('sortFieldSelect').value;
+            const sortType = document.getElementById('sortTypeSelect').value;
+            const sortLang = document.getElementById('sortLangSelect').value;
+
+            let base = '';
+            if (query) base = `/v1/api/tim-kiem?keyword=${encodeURIComponent(query)}`;
+            else if (genre) base = `/the-loai/${genre}`;
+            else if (country) base = `/quoc-gia/${country}`;
+            else if (year) base = `/nam/${year}`;
+            else base = `/danh-sach/phim-moi-cap-nhat`;
+
+            currentParams = new URLSearchParams({ page });
+            if (sortField) currentParams.append('sort_field', sortField);
+            if (sortType) currentParams.append('sort_type', sortType);
+            if (sortLang) currentParams.append('sort_lang', sortLang);
+            if (genre && !base.includes('the-loai')) currentParams.append('category', genre);
+            if (country && !base.includes('quoc-gia')) currentParams.append('country', country);
+            if (year && !base.includes('nam')) currentParams.append('year', year);
+            currentParams.append('limit', 20); // Default limit
+
+            const url = `${API_BASE}${base}?${currentParams.toString()}`;
+
+            try {
+                const data = await fetchWithTimeout(url);
+                displayMovies(data.movie ? data.movie : data.items || []); // Handle different structures
+                currentPage = data.pagination ? data.pagination.currentPage : page;
+                totalPages = data.pagination ? data.pagination.totalPages : 1;
+                updatePagination();
+            } catch (err) {
+                alert('Lỗi load: ' + (err.name === 'AbortError' ? 'Timeout' : err.message));
+            }
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        // Hiển thị phim
         function displayMovies(movies) {
             const list = document.getElementById('movieList');
             list.innerHTML = '';
             movies.forEach(movie => {
+                const poster = movie.poster_url || movie.thumb_url;
+                const webpPoster = `${API_BASE}image.php?url=${encodeURIComponent(poster)}`;
                 const div = document.createElement('div');
-                div.className = 'movie-item';
+                div.className = 'cursor-pointer';
                 div.innerHTML = `
-                    <img src="${movie.thumb_url || movie.poster_url}" alt="${movie.name}">
-                    <p>${movie.name} (${movie.year})</p>
+                    <img src="${webpPoster}" alt="${movie.name}" class="w-full rounded-lg shadow-lg lazy" loading="lazy" onerror="this.src='${poster}'">
+                    <p class="text-center mt-2">${movie.name} (${movie.year})</p>
                 `;
                 div.onclick = () => fetchMovieDetail(movie.slug);
                 list.appendChild(div);
             });
+            if (movies.length === 0) list.innerHTML = '<p class="col-span-full text-center">Không tìm thấy phim.</p>';
         }
-        
-        // Lấy chi tiết phim
+
+        // Chi tiết phim
         async function fetchMovieDetail(slug) {
             try {
-                const res = await fetch(`${API_BASE}phim/${slug}`);
-                const data = await res.json();
-                const movie = data.movie;
-                document.getElementById('movieTitle').textContent = movie.name;
-                document.getElementById('movieDesc').textContent = movie.content;
-                
+                const data = await fetchWithTimeout(`${API_BASE}phim/${slug}`);
+                document.getElementById('movieTitle').textContent = data.movie.name;
+                document.getElementById('movieDesc').textContent = data.movie.content;
+
                 const episodeList = document.getElementById('episodeList');
-                episodeList.innerHTML = '<h3>Danh sách tập:</h3>';
-                data.episodes[0].server_data.forEach(ep => {
+                episodeList.innerHTML = '';
+                (data.episodes[0]?.server_data || []).forEach((ep, index) => {
                     const btn = document.createElement('button');
-                    btn.textContent = ep.name;
+                    btn.className = 'bg-blue-600 p-1 rounded text-sm hover:bg-blue-700';
+                    btn.textContent = ep.name || `Tập ${index + 1}`;
                     btn.onclick = () => playEpisode(ep.link_embed || ep.link_m3u8);
                     episodeList.appendChild(btn);
                 });
-                
-                document.getElementById('movieDetail').style.display = 'block';
-                // Play tập đầu tiên mặc định
-                if (data.episodes[0].server_data[0]) {
+
+                if (data.episodes[0]?.server_data[0]) {
                     playEpisode(data.episodes[0].server_data[0].link_embed || data.episodes[0].server_data[0].link_m3u8);
                 }
+
+                document.getElementById('movieModal').classList.remove('hidden');
             } catch (err) {
-                console.error('Lỗi fetch chi tiết:', err);
+                alert('Lỗi chi tiết: ' + err.message);
             }
         }
-        
-        // Phát phim (sử dụng iframe cho embed, hoặc video cho m3u8)
+
+        // Play
         function playEpisode(link) {
-            const player = document.getElementById('playerIframe');
+            const player = document.getElementById('player');
+            player.innerHTML = '';
             if (link.endsWith('.m3u8')) {
-                // Để hỗ trợ m3u8 tốt hơn, dùng thư viện như hls.js (thêm script bên dưới)
-                player.src = ''; // Reset
-                player.outerHTML = `<video id="playerVideo" class="player" controls></video>`;
-                const video = document.getElementById('playerVideo');
+                const video = document.createElement('video');
+                video.className = 'w-full h-full';
+                video.controls = true;
+                player.appendChild(video);
                 if (Hls.isSupported()) {
-                    const hls = new Hls();
+                    const hls = new Hls({ maxBufferLength: 60, maxMaxBufferLength: 120 });
                     hls.loadSource(link);
                     hls.attachMedia(video);
+                    hls.on(Hls.Events.ERROR, (e, d) => { if (d.fatal) alert('Lỗi HLS'); });
                 } else {
                     video.src = link;
                 }
             } else {
-                player.src = link;
+                const iframe = document.createElement('iframe');
+                iframe.src = link;
+                iframe.className = 'w-full h-full';
+                iframe.allowFullscreen = true;
+                player.appendChild(iframe);
             }
         }
-        
-        // Đóng chi tiết
-        function closeDetail() {
-            document.getElementById('movieDetail').style.display = 'none';
+
+        // Đóng modal
+        function closeModal() {
+            document.getElementById('movieModal').classList.add('hidden');
+            document.getElementById('player').innerHTML = '';
         }
-        
-        // Tìm kiếm (sử dụng API tổng hợp với type=search nếu có, tạm dùng filter local)
-        document.getElementById('search').addEventListener('input', (e) => {
-            const term = e.target.value.toLowerCase();
-            const items = document.querySelectorAll('.movie-item');
-            items.forEach(item => {
-                item.style.display = item.textContent.toLowerCase().includes(term) ? 'block' : 'none';
-            });
+
+        // Pagination
+        function updatePagination() {
+            document.getElementById('pageInfo').textContent = `Trang ${currentPage} / ${totalPages}`;
+            document.getElementById('prevBtn').disabled = currentPage === 1;
+            document.getElementById('nextBtn').disabled = currentPage >= totalPages;
+        }
+
+        function changePage(delta) {
+            currentPage += delta;
+            fetchMovies(currentPage);
+        }
+
+        // Init
+        loadGenres();
+        loadCountries();
+        loadYears();
+        fetchMovies(1);
+
+        document.getElementById('searchInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') fetchMovies(1);
         });
-        
-        // Load phim đầu tiên
-        fetchMovies();
     </script>
-    
-    <!-- Thêm thư viện HLS.js để hỗ trợ m3u8 -->
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 </body>
 </html>
