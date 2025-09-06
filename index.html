@@ -38,9 +38,18 @@
 :root{
   --bg:#0b1020;--panel:#11172c;--panel2:#0e152b;--ring:#2563eb;
   --accent:#e50914;--accent2:#7c3aed;--text:#f5f7fb;--muted:#97a2b3;
+
+  /* Chiều cao header tiêu chuẩn + safe‑area cho iOS */
+  --hdr-h: 64px;
 }
+@media (max-width:640px){ :root{ --hdr-h: 70px; } }
+
 *{box-sizing:border-box}
 html,body{height:100%}
+html{
+  /* Khi cuộn/nhảy tới anchor sẽ chừa chỗ bằng chiều cao header */
+  scroll-padding-top: calc(var(--hdr-h) + env(safe-area-inset-top, 0px));
+}
 body{
   margin:0; color:var(--text);
   font-family:"Plus Jakarta Sans",system-ui,Segoe UI,Roboto,Arial,sans-serif;
@@ -48,16 +57,33 @@ body{
     radial-gradient(900px 600px at 50% -200px, rgba(59,130,246,.25), transparent 60%),
     linear-gradient(180deg, rgba(2,6,23,.85), rgba(2,6,23,0)),
     var(--bg);
+
+  /* Đệm phần trên để nội dung không bị header (fixed) che */
+  padding-top: calc(var(--hdr-h) + env(safe-area-inset-top, 0px));
 }
 a{color:inherit}
 .container{max-width:1160px;margin:0 auto;padding:0 12px}
 
-/* Header */
-.hdr{position:sticky;top:0;z-index:60;backdrop-filter:blur(10px);
-  background:linear-gradient(180deg,rgba(7,11,24,.85),rgba(7,11,24,.5));border-bottom:1px solid rgba(255,255,255,.06)}
-.hdr__row{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:10px 12px}
+/* Header – đổi từ sticky sang fixed để hành vi ổn định trên iOS */
+.hdr{
+  position:fixed; left:0; right:0; top:0;
+  z-index:1000;
+  backdrop-filter:blur(10px);
+  background:linear-gradient(180deg,rgba(7,11,24,.92),rgba(7,11,24,.6));
+  border-bottom:1px solid rgba(255,255,255,.06);
+
+  /* chừa safe‑area phía trên cho iPhone notch */
+  padding-top: env(safe-area-inset-top, 0px);
+}
+.hdr__row{
+  display:grid;grid-template-columns:auto 1fr auto;
+  gap:12px;align-items:center;
+  padding:10px 12px;
+
+  /* đảm bảo chiều cao tối thiểu ổn định giữa các thiết bị */
+  min-height: var(--hdr-h);
+}
 .brand{display:flex;align-items:center;gap:10px}
-.brand img{height:42px}
 .brand__t{font-family:"Cinzel",serif;font-weight:800;letter-spacing:.5px;
   background:linear-gradient(90deg,#c7d2fe,#f0abfc);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 0 16px rgba(124,58,237,.25)}
 .tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
@@ -134,7 +160,10 @@ footer{background:var(--panel);color:var(--muted);padding:24px 12px;border-top:1
 footer .footer-content{max-width:900px;margin:0 auto}
 footer h3{color:#a78bfa;margin-bottom:12px}
 footer a{color:#93c5fd}
-@media(max-width:640px){.movie{width:44.5vw;max-width:200px}.hero__poster{display:none}}
+@media(max-width:640px){
+  .movie{width:44.5vw;max-width:200px}
+  .hero__poster{display:none}
+}
 </style>
 </head>
 <body>
@@ -269,7 +298,7 @@ footer a{color:#93c5fd}
 <footer>
   <div class="footer-content">
     <img src="https://i.postimg.cc/SN2sySt3/08546095-dcf9-4f1f-86af-87b9a5c584f5.png" alt="Logo" style="height:310px" />
-    <p>THANHPHAT cung cấp thông tin phim hot, cập nhật nhanh nhất Việt Nam Chúng tôi không lưu trữ nội dung video.</p>
+    <p>THANHPHAT cung cấp thông tin phim hot, cập nhật nhanh nhất Việt Nam. Chúng tôi không lưu trữ nội dung video.</p>
     <p>© 2025 THANHPHAT</p>
   </div>
 </footer>
@@ -287,7 +316,7 @@ function imgChain(raw,cdn){const a=absUrl(raw,cdn);if(!a)return [ph('Poster')];c
 function onImgError(img){const l=(img.dataset.f||'').split('|').filter(Boolean);let i=+img.dataset.i||0;if(i<l.length-1){img.dataset.i=++i;img.src=l[i]}else{img.onerror=null;img.src=l[l.length-1]}}
 window.onImgError=onImgError;
 
-const memCache=new Map(); // cache nhẹ trong phiên
+const memCache=new Map();
 async function fetchJSON(u,t=10000){if(memCache.has(u)) return memCache.get(u);const c=new AbortController();const k=setTimeout(()=>c.abort(),t);try{const r=await fetch(u,{signal:c.signal,credentials:'omit',cache:'force-cache'});clearTimeout(k);if(!r.ok)throw new Error('HTTP '+r.status);const j=await r.json();memCache.set(u,j);return j}catch(e){clearTimeout(k);throw e}}
 
 function normList(raw){let it=[],cp=1,tp=1,cdn='https://phimimg.com';if(raw?.data?.items){it=raw.data.items;const p=raw.data.params?.pagination||{};cp=p.currentPage||p.current_page||1;tp=p.totalPages||p.total_pages||1;cdn=raw.data.APP_DOMAIN_CDN_IMAGE||cdn}else{it=raw.items||[];cp=raw.pagination?.currentPage||1;tp=raw.pagination?.totalPages||1;cdn=raw.APP_DOMAIN_CDN_IMAGE||cdn}return {items:it,cp,tp,cdn}}
@@ -310,8 +339,9 @@ function card(movie, cdn){
       </div>
     </div>`;
   const posterEl=()=>div.querySelector('.poster');
-  div.addEventListener('mousemove',e=>{const r=posterEl().getBoundingClientRect();const x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;posterEl().style.setProperty('--rx',((.5-y)*10)+'deg');posterEl().style.setProperty('--ry',((x-.5)*10)+'deg')},{passive:true});
-  div.addEventListener('mouseleave',()=>{const p=posterEl();p.style.setProperty('--rx','0deg');p.style.setProperty('--ry','0deg')});
+  /* dùng pointer events để giảm tải trên mobile */
+  div.addEventListener('pointermove',e=>{const r=posterEl().getBoundingClientRect();const x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;posterEl().style.setProperty('--rx',((.5-y)*10)+'deg');posterEl().style.setProperty('--ry',((x-.5)*10)+'deg')},{passive:true});
+  div.addEventListener('pointerleave',()=>{const p=posterEl();p.style.setProperty('--rx','0deg');p.style.setProperty('--ry','0deg')});
   div.addEventListener('click',()=>openDetail(movie.slug));
   return div;
 }
@@ -325,15 +355,11 @@ async function loadHome(){
     const urls=[`${API_BASE}/danh-sach/phim-moi-cap-nhat-v3?page=1`,`${API_BASE}/danh-sach/phim-moi-cap-nhat-v2?page=1`,`${API_BASE}/danh-sach/phim-moi-cap-nhat?page=1`];
     let hot=null;for(const u of urls){try{hot=normList(await fetchJSON(u));break}catch{}}
     if(hot){fillRow('row-hot', hot.items.slice(0,12), hot.cdn);buildHero(hot.items[0],hot.cdn)}
-    // category / lists
     loadBy(`${API_V1}/the-loai/hanh-dong?page=1&limit=36`,'row-hd');
     loadBy(`${API_V1}/the-loai/tinh-cam?page=1&limit=36`,'row-tc');
     loadBy(`${API_V1}/the-loai/kinh-di?page=1&limit=36`,'row-kd');
     loadBy(`${API_V1}/danh-sach/phim-le?page=1&limit=36`,'row-le');
     loadBy(`${API_V1}/danh-sach/phim-bo?page=1&limit=36`,'row-bo');
-
-    // Prefetch Explore nhẹ sau khi idle
-    (window.requestIdleCallback||setTimeout)(()=>startExplore('phim-le','Khám phá: Phim lẻ'),800);
   }catch(e){toast('Lỗi tải trang chủ')}
 }
 async function loadBy(url, cid){try{const d=normList(await fetchJSON(url));fillRow(cid,d.items,d.cdn)}catch{}}
@@ -352,7 +378,11 @@ function buildHero(m,cdn){
 
 /* =================== Explore/Search =================== */
 let explorePage=1, exploreType='phim-le', exploreKey='', exploreTotal=1, exploreCDN='https://phimimg.com';
-function setView(id){['home','explore','fav','his'].forEach(v=>document.getElementById(v).style.display=(v===id)?'block':'none')}
+function setView(id){
+  ['home','explore','fav','his'].forEach(v=>document.getElementById(v).style.display=(v===id)?'block':'none');
+  /* đảm bảo đầu trang không bị header che sau khi chuyển view */
+  requestAnimationFrame(()=>window.scrollTo({top:0,behavior:'auto'}));
+}
 $('#tabs').addEventListener('click',e=>{
   const t=e.target.closest('.tab'); if(!t) return;
   $$('#tabs .tab').forEach(x=>x.classList.remove('active')); t.classList.add('active');
@@ -460,7 +490,3 @@ loadHome();
 </script>
 </body>
 </html>
-
-
-
-
