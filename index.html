@@ -4,38 +4,46 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Web Xem Phim – phimapi.com 2025</title>
+  <link rel="preconnect" href="https://phimapi.com">
+  <link rel="preconnect" href="https://phimimg.com">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   <style>
     :root{color-scheme: dark;}
-    html,body{background:#0b1220;color:#e5e7eb}
-    .hero{background: radial-gradient(1200px 600px at 50% -100px, rgba(59,130,246,.25), transparent 70%), linear-gradient(180deg, rgba(2,6,23,.8), rgba(2,6,23,0))}
-    .glass{backdrop-filter: blur(10px); background: rgba(15,23,42,.55); border: 1px solid rgba(255,255,255,.06)}
-    .btn{background:linear-gradient(135deg,#2563eb,#7c3aed); padding:.55rem .9rem; border-radius:.6rem}
+    html,body{background:#0c1220;color:#e5e7eb}
+    .hero{
+      background:
+        radial-gradient(900px 500px at 50% -120px, rgba(59,130,246,.25), transparent 70%),
+        linear-gradient(180deg, rgba(2,6,23,.9), rgba(2,6,23,0));
+    }
+    .glass{backdrop-filter: blur(10px); background: rgba(15,23,42,.55); border:1px solid rgba(255,255,255,.06)}
+    .btn{background:linear-gradient(135deg,#2563eb,#7c3aed); padding:.55rem .9rem; border-radius:.7rem}
     .btn:hover{filter:brightness(1.1)}
     .btn[disabled]{opacity:.5}
-    .chip{font-size:.7rem; padding:.12rem .4rem; border-radius:.35rem; background:#111827}
-    .card{transition: transform .18s ease, box-shadow .18s ease}
-    .card:hover{transform: translateY(-4px); box-shadow:0 12px 24px rgba(0,0,0,.35)}
-    .grid-skeleton>*{background:#1f2937;height:285px;border-radius:12px;animation:pulse 1.3s ease-in-out infinite}
-    @keyframes pulse{0%{opacity:.45}50%{opacity:.85}100%{opacity:.45}}
-    .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:24px;background:#0b1220;border:1px solid #24304a;color:#fff;padding:10px 14px;border-radius:10px;box-shadow:0 10px 24px rgba(0,0,0,.35);z-index:9999;opacity:.98}
-    .aspect-video{position:relative;width:100%;padding-top:56.25%}
-    .aspect-video>iframe,.aspect-video>video{position:absolute;inset:0;width:100%;height:100%}
+    .chip{font-size:.7rem; padding:.12rem .45rem; border-radius:.35rem; background:#0f172a}
+    .grid-skeleton>*{background:#1f2937;height:0;padding-top:150%;border-radius:14px;animation:pulse 1.2s ease-in-out infinite}
+    @keyframes pulse{0%{opacity:.45}50%{opacity:.8}100%{opacity:.45}}
+    .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:22px;background:#0b1220;border:1px solid #22304c;color:#fff;padding:10px 14px;border-radius:10px;box-shadow:0 10px 24px rgba(0,0,0,.35);z-index:60}
     .sticky-bar{position:sticky; top:0; z-index:40}
+    /* Poster card tỉ lệ 2:3 */
+    .poster{position:relative;width:100%;padding-top:150%;border-radius:14px;overflow:hidden;background:#0f172a}
+    .poster > img, .poster > iframe, .poster > video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+    .card{transition: transform .18s ease, box-shadow .18s ease}
+    .card:hover{transform: translateY(-4px); box-shadow:0 14px 28px rgba(0,0,0,.35)}
+    .overlay{position:absolute;inset:0;background:linear-gradient(to top, rgba(0,0,0,.75), rgba(0,0,0,0));}
   </style>
 </head>
 <body>
   <!-- HERO -->
-  <section class="hero pt-10 pb-6 text-center">
+  <section class="hero pt-9 pb-5 text-center">
     <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight">
-      Web Xem Phim Siêu Mượt <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">2025</span>
+      Web Xem Phim <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">Siêu Mượt 2025</span>
     </h1>
-    <p class="mt-2 text-slate-400">Thành Phát <span class="font-mono">Chúc Cả Nhà</span> Xem Phim Vui Vẻ Nhé</p>
+    <p class="mt-2 text-slate-400">API <span class="font-mono">phimapi.com</span> • Bộ lọc nâng cao • HLS mượt • Giao diện điện ảnh</p>
   </section>
 
   <!-- FILTER BAR -->
-  <div class="sticky-bar glass mx-auto max-w-7xl rounded-xl px-4 py-3 mt-2">
+  <div class="sticky-bar glass mx-auto max-w-7xl rounded-xl px-4 py-3">
     <div class="flex flex-wrap items-center gap-2 md:gap-3 justify-center">
       <input id="searchInput" type="text" placeholder="Tìm phim..." class="p-2 bg-slate-900 border border-slate-700 rounded-lg text-white w-64" />
       <select id="collectionSelect" class="p-2 bg-slate-900 border border-slate-700 rounded-lg text-white">
@@ -88,9 +96,9 @@
 
   <!-- PAGINATION -->
   <div class="flex justify-center mt-8 gap-4">
-    <button id="prevBtn" class="glass p-2 rounded-lg disabled:opacity-50">Trước</button>
+    <button id="prevBtn" class="glass px-3 py-2 rounded-lg disabled:opacity-50">Trước</button>
     <span id="pageInfo" class="p-2">Trang 1</span>
-    <button id="nextBtn" class="glass p-2 rounded-lg">Sau</button>
+    <button id="nextBtn" class="glass px-3 py-2 rounded-lg">Sau</button>
   </div>
 
   <!-- MODAL -->
@@ -117,7 +125,7 @@
       </div>
 
       <div id="episodeList" class="mb-4 flex flex-wrap gap-2"></div>
-      <div id="player" class="mb-4 aspect-video bg-black/60 rounded-lg"></div>
+      <div id="player" class="mb-4 poster bg-black/60"></div>
     </div>
   </div>
 
@@ -128,13 +136,11 @@
     let currentPage = 1, totalPages = 1;
 
     // ========= TIỆN ÍCH =========
-    const $ = (id)=> document.getElementById(id);
-    function toast(msg, ms=2500){
-      const t = document.createElement('div');
-      t.className='toast'; t.textContent=msg;
-      document.body.appendChild(t); setTimeout(()=>t.remove(), ms);
+    const $ = id => document.getElementById(id);
+    function toast(msg, ms=2400){
+      const t=document.createElement('div'); t.className='toast'; t.textContent=msg;
+      document.body.appendChild(t); setTimeout(()=>t.remove(),ms);
     }
-
     async function fetchJSON(url, timeout=12000){
       const controller=new AbortController();
       const timer=setTimeout(()=>controller.abort(),timeout);
@@ -146,7 +152,7 @@
       }catch(e){ clearTimeout(timer); throw e; }
     }
 
-    // ========= NẠP DANH MỤC =========
+    // ========= LOAD DANH MỤC =========
     async function loadGenres(){
       try{
         const arr = await fetchJSON(`${API_BASE}/the-loai`);
@@ -166,91 +172,102 @@
       }catch{}
     }
     function loadYears(){
-      const sel = $('yearSelect');
-      const end = new Date().getFullYear()+1;
-      for(let y=end;y>=1970;y--){
-        const opt=document.createElement('option'); opt.value=String(y); opt.textContent=String(y); sel.appendChild(opt);
-      }
+      const sel=$('yearSelect'); const end=new Date().getFullYear()+1;
+      for(let y=end;y>=1970;y--){ const o=document.createElement('option'); o.value=String(y); o.textContent=String(y); sel.appendChild(o); }
     }
 
-    // ========= ẢNH – FALLBACK CHUỖI =========
+    // ========= XỬ LÝ ẢNH =========
+    function absUrlIfNeeded(u){
+      if(!u) return '';
+      if(/^https?:\/\//i.test(u)) return u;
+      if(u.startsWith('//')) return window.location.protocol + u;
+      // KKPhim trả /upload/... -> gắn domain chuẩn
+      if(u.startsWith('/upload/')) return 'https://phimimg.com' + u;
+      return u;
+    }
+    function isKKImg(u){
+      try{ const h = new URL(u).hostname; return h==='phimimg.com' || h.endsWith('.phimimg.com'); }
+      catch{ return false; }
+    }
     function svgPlaceholder(title){
-      const safe = (title || 'No Image').replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s])).slice(0,40);
-      const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='480' height='720'>
+      const safe=(title||'No Image').replace(/[&<>"']/g, s=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[s])).slice(0,40);
+      const svg=`<svg xmlns='http://www.w3.org/2000/svg' width='480' height='720'>
         <defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop stop-color='#0b1220'/><stop offset='1' stop-color='#111827'/></linearGradient></defs>
         <rect width='100%' height='100%' fill='url(#g)'/>
-        <text x='50%' y='52%' font-size='28' fill='#9ca3af' text-anchor='middle' font-family='system-ui,Segoe UI,Roboto,sans-serif'>${safe}</text>
+        <g fill='#9ca3af' transform='translate(240,280)'><circle r='38'/><rect x='-60' y='50' width='120' height='6' rx='3'/></g>
+        <text x='50%' y='92%' font-size='26' fill='#9ca3af' text-anchor='middle' font-family='system-ui,Segoe UI,Roboto,sans-serif'>${safe}</text>
       </svg>`;
       return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
     }
     function imgFallback(img){
-      const parts = (img.dataset.fallbackSrcs || '').split('|').filter(Boolean);
-      let idx = parseInt(img.dataset.fallbackIdx||'0',10);
-      if(idx < parts.length - 1){
+      const list=(img.dataset.fallbackSrcs||'').split('|').filter(Boolean);
+      let idx=parseInt(img.dataset.fallbackIdx||'0',10);
+      if(idx < list.length-1){
         idx++; img.dataset.fallbackIdx=String(idx);
-        img.src = parts[idx];
+        img.src=list[idx];
       }else{
-        img.onerror=null; img.src = svgPlaceholder(img.alt||'No Image');
+        img.onerror=null; img.src=svgPlaceholder(img.alt||'No Image');
       }
     }
+    window.imgFallback = imgFallback; // để onerror inline gọi được
 
     // ========= CHUẨN HOÁ LIST =========
     function normalizeListResponse(raw){
       let items=[], cp=1, tp=1;
       if(raw?.data?.items){
-        items = raw.data.items || [];
-        const p = raw?.data?.params?.pagination || {};
-        cp = p.currentPage || p.current_page || 1;
-        tp = p.totalPages  || p.total_pages  || 1;
+        items=raw.data.items||[];
+        const p=raw?.data?.params?.pagination||{};
+        cp=p.currentPage||p.current_page||1;
+        tp=p.totalPages||p.total_pages||1;
       }else{
-        items = raw?.items || [];
-        const p = raw?.pagination || {};
-        cp = p.currentPage || 1;
-        tp = p.totalPages  || 1;
+        items=raw?.items||[];
+        const p=raw?.pagination||{};
+        cp=p.currentPage||1;
+        tp=p.totalPages||1;
       }
       return {items, currentPage:cp, totalPages:tp};
     }
 
-    // ========= HIỂN THỊ LIST =========
+    // ========= RENDER LIST =========
     function renderSkeletonGrid(){
       const list=$('movieList');
       list.classList.add('grid-skeleton');
       list.innerHTML = Array.from({length:12}).map(()=>'<div></div>').join('');
     }
     function displayMovies(movies){
-      const list = $('movieList');
+      const list=$('movieList');
       list.classList.remove('grid-skeleton');
       list.innerHTML='';
       movies.forEach(movie=>{
         const title = movie.name || '';
-        const orig = movie.poster_url || movie.thumb_url || '';
-        const webp = orig ? `${API_BASE}/image.php?url=${encodeURIComponent(orig)}` : '';
+        const origRaw = movie.poster_url || movie.thumb_url || movie.poster || '';
+        const orig = absUrlIfNeeded(origRaw);
+        const useProxy = isKKImg(orig);
+        const proxy = useProxy ? `${API_BASE}/image.php?url=${encodeURIComponent(orig)}` : '';
         const placeholder = svgPlaceholder(title);
-        const fallbacks = [webp, orig, placeholder].filter(Boolean).join('|');
+        const fallbacks=[proxy, orig, placeholder].filter(Boolean).join('|');
 
-        const year = movie.year ? `<span class="chip">${movie.year}</span>` : '';
-        const div = document.createElement('div');
-        div.className='card cursor-pointer';
+        const div=document.createElement('div');
+        div.className='card cursor-pointer select-none';
         div.innerHTML = `
-          <div class="relative rounded-xl overflow-hidden bg-slate-800">
-            <img src="${webp||orig||placeholder}"
+          <div class="poster">
+            <img src="${proxy||orig||placeholder}"
                  alt="${title}"
                  referrerpolicy="no-referrer"
-                 loading="lazy"
-                 decoding="async"
-                 data-fallback-srcs="${fallbacks}"
-                 data-fallback-idx="0"
-                 onerror="imgFallback(this)"
-                 class="w-full h-64 object-cover">
-            <div class="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/70 to-transparent">
-              <div class="flex items-center justify-between gap-2">
-                <h3 class="text-sm font-semibold line-clamp-2">${title}</h3>
-                ${year}
+                 decoding="async" loading="lazy"
+                 data-fallback-srcs="${fallbacks}" data-fallback-idx="0"
+                 onerror="imgFallback(this)">
+            <div class="overlay"></div>
+            <div class="absolute left-2 right-2 bottom-2">
+              <h3 class="text-sm font-semibold line-clamp-2">${title}</h3>
+              <div class="mt-1 flex items-center gap-1">
+                ${movie.year ? `<span class="chip">${movie.year}</span>` : ``}
+                ${movie.lang ? `<span class="chip">${movie.lang}</span>` : ``}
               </div>
             </div>
           </div>
         `;
-        div.onclick = ()=> fetchMovieDetail(movie.slug || movie.slug_name || movie._id || '');
+        div.onclick=()=> fetchMovieDetail(movie.slug || movie.slug_name || movie._id || '');
         list.appendChild(div);
       });
       if(!movies.length){
@@ -267,267 +284,207 @@
 
     // ========= GHÉP URL =========
     function buildListUrlArray(page){
-      const q   = $('searchInput').value.trim();
-      const coll= $('collectionSelect').value; // type_list
-      const g   = $('genreSelect').value;
-      const c   = $('countrySelect').value;
-      const y   = $('yearSelect').value;
-      const sf  = $('sortFieldSelect').value;
-      const st  = $('sortTypeSelect').value;
-      const sl  = $('sortLangSelect').value;
-      const listSrc = $('listSourceSelect').value;
+      const q=$('searchInput').value.trim();
+      const coll=$('collectionSelect').value;
+      const g=$('genreSelect').value;
+      const c=$('countrySelect').value;
+      const y=$('yearSelect').value;
+      const sf=$('sortFieldSelect').value;
+      const st=$('sortTypeSelect').value;
+      const sl=$('sortLangSelect').value;
+      const listSrc=$('listSourceSelect').value;
 
-      // 1) TÌM KIẾM
+      // TÌM KIẾM
       if(q){
-        const p = new URLSearchParams({keyword:q, page, limit:'24'});
-        if(sf) p.set('sort_field', sf);
-        if(st) p.set('sort_type', st);
-        if(sl) p.set('sort_lang', sl);
-        if(g)  p.set('category', g);
-        if(c)  p.set('country', c);
-        if(y)  p.set('year', y);
+        const p=new URLSearchParams({keyword:q,page,limit:'24'});
+        if(sf) p.set('sort_field',sf);
+        if(st) p.set('sort_type',st);
+        if(sl) p.set('sort_lang',sl);
+        if(g)  p.set('category',g);
+        if(c)  p.set('country',c);
+        if(y)  p.set('year',y);
         return [`${API_V1}/tim-kiem?${p.toString()}`];
       }
 
-      // 2) BỘ SƯU TẬP (type_list)
+      // BỘ SƯU TẬP
       if(coll){
-        const p = new URLSearchParams({page, limit:'24'});
-        if(sf) p.set('sort_field', sf);
-        if(st) p.set('sort_type', st);
-        if(sl) p.set('sort_lang', sl);
-        if(g)  p.set('category', g);
-        if(c)  p.set('country', c);
-        if(y)  p.set('year', y);
+        const p=new URLSearchParams({page,limit:'24'});
+        if(sf) p.set('sort_field',sf);
+        if(st) p.set('sort_type',st);
+        if(sl) p.set('sort_lang',sl);
+        if(g)  p.set('category',g);
+        if(c)  p.set('country',c);
+        if(y)  p.set('year',y);
         return [`${API_V1}/danh-sach/${coll}?${p.toString()}`];
       }
 
-      // 3) THỂ LOẠI / QG / NĂM
+      // THỂ LOẠI / QG / NĂM
       if(g){
-        const p = new URLSearchParams({page, limit:'24'});
-        if(sf) p.set('sort_field', sf);
-        if(st) p.set('sort_type', st);
-        if(sl) p.set('sort_lang', sl);
-        if(c)  p.set('country', c);
-        if(y)  p.set('year', y);
+        const p=new URLSearchParams({page,limit:'24'});
+        if(sf) p.set('sort_field',sf);
+        if(st) p.set('sort_type',st);
+        if(sl) p.set('sort_lang',sl);
+        if(c)  p.set('country',c);
+        if(y)  p.set('year',y);
         return [`${API_V1}/the-loai/${g}?${p.toString()}`];
       }
       if(c){
-        const p = new URLSearchParams({page, limit:'24'});
-        if(sf) p.set('sort_field', sf);
-        if(st) p.set('sort_type', st);
-        if(sl) p.set('sort_lang', sl);
-        if(g)  p.set('category', g);
-        if(y)  p.set('year', y);
+        const p=new URLSearchParams({page,limit:'24'});
+        if(sf) p.set('sort_field',sf);
+        if(st) p.set('sort_type',st);
+        if(sl) p.set('sort_lang',sl);
+        if(g)  p.set('category',g);
+        if(y)  p.set('year',y);
         return [`${API_V1}/quoc-gia/${c}?${p.toString()}`];
       }
       if(y){
-        const p = new URLSearchParams({page, limit:'24'});
-        if(sf) p.set('sort_field', sf);
-        if(st) p.set('sort_type', st);
-        if(sl) p.set('sort_lang', sl);
-        if(g)  p.set('category', g);
-        if(c)  p.set('country', c);
+        const p=new URLSearchParams({page,limit:'24'});
+        if(sf) p.set('sort_field',sf);
+        if(st) p.set('sort_type',st);
+        if(sl) p.set('sort_lang',sl);
+        if(g)  p.set('category',g);
+        if(c)  p.set('country',c);
         return [`${API_V1}/nam/${y}?${p.toString()}`];
       }
 
-      // 4) DANH SÁCH MẶC ĐỊNH (v3/v2/v1)
-      const urls = [];
-      const v3 = `${API_BASE}/danh-sach/phim-moi-cap-nhat-v3?page=${page}`;
-      const v2 = `${API_BASE}/danh-sach/phim-moi-cap-nhat-v2?page=${page}`;
-      const v1 = `${API_BASE}/danh-sach/phim-moi-cap-nhat?page=${page}`;
+      // DANH SÁCH MẶC ĐỊNH (v3/v2/v1)
+      const v3=`${API_BASE}/danh-sach/phim-moi-cap-nhat-v3?page=${page}`;
+      const v2=`${API_BASE}/danh-sach/phim-moi-cap-nhat-v2?page=${page}`;
+      const v1=`${API_BASE}/danh-sach/phim-moi-cap-nhat?page=${page}`;
       if(listSrc==='v3') return [v3];
       if(listSrc==='v2') return [v2];
       if(listSrc==='v1') return [v1];
-      // auto
-      return [v3, v2, v1];
+      return [v3,v2,v1];
     }
-
     async function tryFetchSequential(urls){
       let lastErr;
       for(const u of urls){
-        try{
-          const raw = await fetchJSON(u);
-          const norm = normalizeListResponse(raw);
-          // Nếu trả về hợp lệ, nhận luôn
-          return norm;
-        }catch(e){ lastErr = e; }
+        try{ const raw=await fetchJSON(u); return normalizeListResponse(raw); }
+        catch(e){ lastErr=e; }
       }
-      throw lastErr || new Error('Không fetch được dữ liệu');
+      throw lastErr||new Error('Không fetch được dữ liệu');
     }
-
     async function fetchMovies(page=1){
       $('loading').classList.remove('hidden');
       renderSkeletonGrid();
       try{
-        const urls = buildListUrlArray(page);
+        const urls=buildListUrlArray(page);
         const {items, currentPage:cp, totalPages:tp} = urls.length>1 ? await tryFetchSequential(urls) : normalizeListResponse(await fetchJSON(urls[0]));
         displayMovies(items);
-        currentPage = cp || page;
-        totalPages  = tp || 1;
-        updatePagination();
+        currentPage=cp||page; totalPages=tp||1; updatePagination();
       }catch(e){
         $('movieList').classList.remove('grid-skeleton');
-        $('movieList').innerHTML = `<p class="col-span-full text-center text-red-400">Lỗi tải danh sách: ${e.message || e}</p>`;
-      }finally{
-        $('loading').classList.add('hidden');
-      }
+        $('movieList').innerHTML=`<p class="col-span-full text-center text-red-400">Lỗi tải danh sách: ${e.message||e}</p>`;
+      }finally{ $('loading').classList.add('hidden'); }
     }
 
-    // ========= CHI TIẾT & PLAYER =========
-    let hlsInstance = null;
-    function cleanupPlayer(){
-      if(hlsInstance){ try{ hlsInstance.destroy(); }catch{} hlsInstance=null; }
-      $('player').innerHTML='';
-    }
-    function buildServersMap(episodes){
-      const map = new Map();
-      (episodes||[]).forEach((sv,idx)=> map.set(idx, sv.server_data || []));
-      return map;
-    }
+    // ========= CHI TIẾT + PLAYER =========
+    let hlsInstance=null;
+    function cleanupPlayer(){ if(hlsInstance){ try{hlsInstance.destroy();}catch{} } hlsInstance=null; $('player').innerHTML=''; }
+    function buildServersMap(episodes){ const m=new Map(); (episodes||[]).forEach((sv,i)=>m.set(i,sv.server_data||[])); return m; }
+
     async function fetchMovieDetail(slug){
       if(!slug){ toast('Không xác định được phim.'); return; }
-      cleanupPlayer();
-      $('episodeList').innerHTML='';
-      $('serverSelect').innerHTML='<option>Đang tải...</option>';
-      $('sourceSelect').value='auto';
+      cleanupPlayer(); $('episodeList').innerHTML=''; $('serverSelect').innerHTML='<option>Đang tải...</option>'; $('sourceSelect').value='auto';
 
       try{
-        const data = await fetchJSON(`${API_BASE}/phim/${slug}`);
-        const m = data?.movie || {};
-        const eps = data?.episodes || [];
+        const data=await fetchJSON(`${API_BASE}/phim/${slug}`);
+        const m=data?.movie||{}; const eps=data?.episodes||[];
 
-        $('movieTitle').textContent = m.name || '';
-        const meta = [];
+        $('movieTitle').textContent=m.name||'';
+        const meta=[];
         if(m.year) meta.push(`Năm: ${m.year}`);
         if(m.lang) meta.push(`Ngôn ngữ: ${m.lang}`);
         if(Array.isArray(m.category)) meta.push(`Thể loại: ${m.category.map(c=>c.name).join(', ')}`);
         if(Array.isArray(m.country))  meta.push(`QG: ${m.country.map(c=>c.name).join(', ')}`);
-        $('movieMeta').textContent = meta.join(' • ');
-        $('movieDesc').textContent = (m.content || '').replace(/\s+/g,' ').trim();
+        $('movieMeta').textContent=meta.join(' • ');
+        $('movieDesc').textContent=(m.content||'').replace(/\s+/g,' ').trim();
 
-        const serverSel = $('serverSelect');
-        serverSel.innerHTML='';
-        eps.forEach((sv, i)=>{
-          const opt = document.createElement('option');
-          opt.value = i; opt.textContent = sv.server_name || `Server ${i+1}`;
-          serverSel.appendChild(opt);
-        });
+        const serverSel=$('serverSelect'); serverSel.innerHTML='';
+        eps.forEach((sv,i)=>{ const o=document.createElement('option'); o.value=i; o.textContent=sv.server_name||`Server ${i+1}`; serverSel.appendChild(o); });
 
-        const serversMap = buildServersMap(eps);
-        function renderEpisodes(serverIndex){
-          const list = $('episodeList'); list.innerHTML='';
-          const arr = serversMap.get(Number(serverIndex)) || [];
-          arr.forEach((ep, idx)=>{
-            const btn = document.createElement('button');
-            btn.className='btn text-white text-sm'; btn.style.padding='.35rem .6rem';
-            btn.textContent = ep.name || `Tập ${idx+1}`;
-            btn.onclick = ()=> playEpisode(ep);
-            list.appendChild(btn);
+        const serversMap=buildServersMap(eps);
+        function renderEpisodes(idx){
+          const list=$('episodeList'); list.innerHTML='';
+          const arr=serversMap.get(Number(idx))||[];
+          arr.forEach((ep,i)=>{
+            const b=document.createElement('button');
+            b.className='btn text-white text-sm'; b.style.padding='.35rem .6rem';
+            b.textContent=ep.name||`Tập ${i+1}`;
+            b.onclick=()=> playEpisode(ep);
+            list.appendChild(b);
           });
-          if(arr[0]) playEpisode(arr[0], true);
+          if(arr[0]) playEpisode(arr[0],true);
         }
-        serverSel.onchange = e=> renderEpisodes(e.target.value);
+        serverSel.onchange=e=>renderEpisodes(e.target.value);
         if(eps.length){ renderEpisodes(0); }
 
-        $('movieModal').classList.remove('hidden');
-        $('movieModal').classList.add('flex');
-      }catch(e){
-        toast('Lỗi tải chi tiết: '+(e.message||e), 3500);
-      }
+        $('movieModal').classList.remove('hidden'); $('movieModal').classList.add('flex');
+      }catch(e){ toast('Lỗi tải chi tiết: '+(e.message||e), 3200); }
     }
 
     function tryPlayHls(video, m3u8Url, onFatal){
       if(!Hls.isSupported()){
         if(video.canPlayType('application/vnd.apple.mpegurl')){
-          video.src = m3u8Url;
-          video.addEventListener('error', ()=> onFatal && onFatal('native-error'));
-        }else onFatal && onFatal('not-supported');
+          video.src=m3u8Url; video.addEventListener('error',()=>onFatal&&onFatal('native-error'));
+        }else onFatal&&onFatal('not-supported');
         return;
       }
-      hlsInstance = new Hls({
-        enableWorker: true, lowLatencyMode: true,
-        backBufferLength: 30, maxBufferLength: 30, maxMaxBufferLength: 60,
-      });
-      let recovered = false;
-      hlsInstance.loadSource(m3u8Url);
-      hlsInstance.attachMedia(video);
-      hlsInstance.on(Hls.Events.ERROR, function(_, data){
-        if(data.fatal){
-          switch(data.type){
-            case Hls.ErrorTypes.NETWORK_ERROR:
-              try{ hlsInstance.startLoad(); }catch{ onFatal && onFatal('network'); }
-              break;
+      hlsInstance=new Hls({enableWorker:true,lowLatencyMode:true,backBufferLength:30,maxBufferLength:30,maxMaxBufferLength:60});
+      let recovered=false;
+      hlsInstance.loadSource(m3u8Url); hlsInstance.attachMedia(video);
+      hlsInstance.on(Hls.Events.ERROR,(_,d)=>{
+        if(d.fatal){
+          switch(d.type){
+            case Hls.ErrorTypes.NETWORK_ERROR: try{hlsInstance.startLoad();}catch{onFatal&&onFatal('network');} break;
             case Hls.ErrorTypes.MEDIA_ERROR:
-              if(!recovered){ recovered=true; try{ hlsInstance.recoverMediaError(); }catch{ onFatal && onFatal('media'); } }
-              else onFatal && onFatal('media');
-              break;
-            default: onFatal && onFatal('fatal');
+              if(!recovered){recovered=true; try{hlsInstance.recoverMediaError();}catch{onFatal&&onFatal('media');}}
+              else onFatal&&onFatal('media'); break;
+            default: onFatal&&onFatal('fatal');
           }
         }
       });
     }
-
-    function playAsIframe(embedUrl){
-      const player = $('player'); player.innerHTML='';
-      const iframe = document.createElement('iframe');
-      iframe.src = embedUrl;
-      iframe.setAttribute('allow','autoplay; encrypted-media; picture-in-picture');
-      iframe.setAttribute('referrerpolicy','no-referrer');
-      iframe.allowFullscreen = true;
-      iframe.className='w-full h-full rounded-lg';
-      player.appendChild(iframe);
+    function playAsIframe(url){
+      const p=$('player'); p.innerHTML='';
+      const f=document.createElement('iframe');
+      f.src=url; f.setAttribute('allow','autoplay; encrypted-media; picture-in-picture');
+      f.setAttribute('referrerpolicy','no-referrer'); f.allowFullscreen=true;
+      p.appendChild(f);
     }
-
-    function playEpisode(ep, isAuto=false){
+    function playEpisode(ep, auto=false){
       cleanupPlayer();
-      const mode = $('sourceSelect').value; // auto | embed | hls
-      const hasEmbed = !!ep.link_embed;
-      const hasHls   = typeof ep.link_m3u8 === 'string' && ep.link_m3u8.endsWith('.m3u8');
+      const mode=$('sourceSelect').value;
+      const hasE=!!ep.link_embed;
+      const hasH=typeof ep.link_m3u8==='string' && ep.link_m3u8.endsWith('.m3u8');
 
-      if(mode==='embed' && hasEmbed){ playAsIframe(ep.link_embed); return; }
-      if(mode==='hls' && hasHls){
-        const video = document.createElement('video');
-        video.controls = true; video.playsInline = true; video.autoplay = true;
-        video.className='w-full h-full rounded-lg'; video.crossOrigin='anonymous';
-        $('player').appendChild(video);
-        tryPlayHls(video, ep.link_m3u8, (reason)=>{
-          toast('HLS lỗi ('+reason+'). Chuyển sang EMBED.', 3500);
-          if(hasEmbed) playAsIframe(ep.link_embed);
-        });
+      if(mode==='embed' && hasE){ playAsIframe(ep.link_embed); return; }
+      if(mode==='hls' && hasH){
+        const v=document.createElement('video');
+        v.controls=true; v.playsInline=true; v.autoplay=true; v.crossOrigin='anonymous';
+        $('player').appendChild(v);
+        tryPlayHls(v,ep.link_m3u8,(r)=>{ toast('HLS lỗi ('+r+'). Chuyển sang EMBED.',3000); if(hasE) playAsIframe(ep.link_embed); });
         return;
       }
-
       // AUTO
-      if(hasEmbed){ playAsIframe(ep.link_embed); return; }
-      if(hasHls){
-        const video = document.createElement('video');
-        video.controls = true; video.playsInline = true; video.autoplay = true;
-        video.className='w-full h-full rounded-lg'; video.crossOrigin='anonymous';
-        $('player').appendChild(video);
-        tryPlayHls(video, ep.link_m3u8, (reason)=>{
-          if(hasEmbed){ toast('HLS lỗi ('+reason+'). Chuyển sang EMBED.', 3500); playAsIframe(ep.link_embed); }
-          else toast('Không phát được nguồn cho tập này.', 3000);
-        });
+      if(hasE){ playAsIframe(ep.link_embed); return; }
+      if(hasH){
+        const v=document.createElement('video');
+        v.controls=true; v.playsInline=true; v.autoplay=true; v.crossOrigin='anonymous';
+        $('player').appendChild(v);
+        tryPlayHls(v,ep.link_m3u8,(r)=>{ if(hasE){ toast('HLS lỗi ('+r+'). Chuyển sang EMBED.',3000); playAsIframe(ep.link_embed); } else toast('Không phát được nguồn.',2600); });
         return;
       }
-      toast('Nguồn phát không khả dụng cho tập này.', 3000);
+      toast('Nguồn phát không khả dụng cho tập này.',2400);
     }
-
-    $('sourceSelect').addEventListener('change', ()=>{
-      const firstBtn = $('episodeList').querySelector('button');
-      if(firstBtn) firstBtn.click();
-    });
+    $('sourceSelect').addEventListener('change',()=>{ const b=$('episodeList').querySelector('button'); if(b) b.click(); });
 
     // ========= SỰ KIỆN =========
-    $('searchBtn').addEventListener('click', ()=> fetchMovies(1));
-    $('prevBtn').addEventListener('click', ()=>{ if(currentPage>1){ fetchMovies(currentPage-1);} });
-    $('nextBtn').addEventListener('click', ()=>{ if(currentPage<totalPages){ fetchMovies(currentPage+1);} });
-    $('closeBtn').addEventListener('click', ()=>{
-      cleanupPlayer();
-      $('movieModal').classList.add('hidden');
-      $('movieModal').classList.remove('flex');
-    });
-    $('searchInput').addEventListener('keypress', (e)=>{ if(e.key==='Enter'){ fetchMovies(1); } });
+    $('searchBtn').addEventListener('click',()=>fetchMovies(1));
+    $('prevBtn').addEventListener('click',()=>{ if(currentPage>1) fetchMovies(currentPage-1); });
+    $('nextBtn').addEventListener('click',()=>{ if(currentPage<totalPages) fetchMovies(currentPage+1); });
+    $('closeBtn').addEventListener('click',()=>{ cleanupPlayer(); $('movieModal').classList.add('hidden'); $('movieModal').classList.remove('flex'); });
+    $('searchInput').addEventListener('keypress',e=>{ if(e.key==='Enter') fetchMovies(1); });
 
     // ========= KHỞI TẠO =========
     loadGenres(); loadCountries(); loadYears(); fetchMovies(1);
