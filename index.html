@@ -66,7 +66,7 @@ a{color:inherit;text-decoration:none}
 .btn:active{transform:translateY(0)}
 .btn-pill{border-radius:999px}
 .btn-ghost{background:#0f172a;border:1px solid rgba(255,255,255,.12);color:#e5e7eb}
-.search{display:flex;gap:8px;background:rgba(255,255,255,.06);
+.search{position:relative;display:flex;gap:8px;background:rgba(255,255,255,.06);
   border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:8px 10px;min-width:220px}
 .search input{flex:1;background:transparent;border:0;color:var(--text);outline:0}
 .tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
@@ -232,6 +232,11 @@ a{color:inherit;text-decoration:none}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
 #explore{padding-bottom:22px}
 
+/* Explore filter bar */
+#filterBar{margin:6px 2px 12px}
+#filterBar .label{opacity:.9;margin-right:6px}
+#filterBar .btn-clear{margin-left:8px}
+
 /* ===== Ads ===== */
 .ad-slot{position:relative;display:block;margin:14px 0;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03)}
 .ad-slot .ad-label{position:absolute;top:6px;left:8px;font-size:11px;color:#9aa4b5;background:rgba(0,0,0,.45);padding:3px 6px;border-radius:6px;border:1px solid rgba(255,255,255,.1)}
@@ -266,6 +271,10 @@ a{color:inherit;text-decoration:none}
 .eps{margin-top:12px;display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
 .eps button{padding:8px;background:#151c36;border:1px solid rgba(255,255,255,.08);color:white;border-radius:8px;cursor:pointer;font-weight:800}
 .eps button.sel{outline:2px solid #60a5fa;background:#0b1430}
+
+/* Cast */
+.cast{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.cast .person{padding:6px 10px;border-radius:999px;background:#121a36;border:1px solid rgba(255,255,255,.08);font-size:13px}
 
 /* Close button */
 .close{position:fixed;right:16px;top:16px;width:42px;height:42px;display:grid;place-items:center;border-radius:50%;
@@ -334,6 +343,7 @@ footer a{color:#93c5fd}
     <div class="search" role="search">
       <input id="q" placeholder="Tìm phim... (ấn / để focus)" aria-label="Tìm phim">
       <button id="btnSearch" class="btn btn-pill">Tìm</button>
+      <!-- <div id="suggest" class="suggest"></div> -->
     </div>
   </div>
 </header>
@@ -415,6 +425,17 @@ footer a{color:#93c5fd}
   <div class="sec"><h2>🔥 Phim Hot</h2></div>
   <div class="row"><div id="row-hot" class="movie-row"></div></div>
 
+  <!-- ✨ DẢI NÂNG CẤP -->
+  <div class="sec"><h2>✨ Đề xuất cho bạn</h2></div>
+  <div class="row"><div id="row-foru" class="movie-row"></div></div>
+
+  <div class="sec"><h2>⏳ Sắp chiếu</h2></div>
+  <div class="row"><div id="row-upcoming" class="movie-row"></div></div>
+
+  <div class="sec"><h2>🎯 Top IMDb</h2></div>
+  <div class="row"><div id="row-imdb" class="movie-row"></div></div>
+  <!-- / ✨ -->
+
   <!-- In-page Ad giữa trang -->
   <div id="adMidHome" class="ad-slot" aria-label="Quảng cáo"></div>
 
@@ -441,6 +462,31 @@ footer a{color:#93c5fd}
 <!-- EXPLORE -->
 <section id="explore" class="container" style="display:none">
   <div class="sec"><h2 id="exploreTitle">Khám phá</h2></div>
+
+  <!-- Bộ lọc nhanh -->
+  <div id="filterBar" class="toolbar">
+    <span class="label">Lọc nhanh:</span>
+    <label>Thể loại
+      <select id="fCat"><option value="">Tất cả</option></select>
+    </label>
+    <label>Quốc gia
+      <select id="fCountry"><option value="">Tất cả</option></select>
+    </label>
+    <label>Năm
+      <select id="fYear"><option value="">Tất cả</option></select>
+    </label>
+    <div class="sep"></div>
+    <label>Sắp xếp
+      <select id="fSort">
+        <option value="new" selected>Mới nhất</option>
+        <option value="year">Năm ↓</option>
+        <option value="imdb">IMDb ↓</option>
+        <option value="az">A → Z</option>
+      </select>
+    </label>
+    <button id="fReset" class="btn btn-ghost btn-clear">Đặt lại</button>
+  </div>
+
   <div id="grid" class="grid"></div>
   <div id="sentinel" style="height:1px"></div>
 </section>
@@ -516,6 +562,12 @@ footer a{color:#93c5fd}
 
         <h4 style="margin-top:14px">Danh sách tập</h4>
         <div id="eps" class="eps"></div>
+
+        <h4 style="margin-top:14px">Diễn viên</h4>
+        <div id="cast" class="cast"></div>
+
+        <h4 style="margin-top:14px">Đề xuất tương tự</h4>
+        <div class="row"><div id="row-similar" class="movie-row"></div></div>
       </div>
     </div>
   </div>
@@ -564,7 +616,7 @@ function ph(t){
   <rect width='100%' height='100%' fill='url(#g)'/>
   <g fill='#9ca3af' transform='translate(240,280)'><circle r='38'/><rect x='-60' y='50' width='120' height='6' rx='3'/></g>
   <text x='50%' y='92%' font-size='26' fill='#9ca3af' text-anchor='middle' font-family='system-ui,Segoe UI,Roboto,sans-serif'>${s}</text>
-</svg>`);}
+</svg>`)}
 function imgChain(raw,cdn){
   const a=absUrl(raw,cdn); if(!a) return [ph('Poster')];
   const httpsFix=(location.protocol==='https:'&&/^http:\/\//i.test(a))?a.replace(/^http:/,'https:'):'';
@@ -644,11 +696,13 @@ function card(movie, cdn){
   return div;
 }
 function fillRow(containerId, items, cdn){
-  const el=document.getElementById(containerId); el.innerHTML='';
+  const el=document.getElementById(containerId); if(!el) return;
+  el.innerHTML='';
   items.forEach(m=>el.appendChild(card(m,cdn)));
 }
 function skeletonRow(containerId,n=10){
-  const el=document.getElementById(containerId); el.innerHTML='';
+  const el=document.getElementById(containerId); if(!el) return;
+  el.innerHTML='';
   for(let i=0;i<n;i++){const d=document.createElement('div');d.className='movie';d.innerHTML='<div class="skeleton"></div>';el.appendChild(d)}
 }
 
@@ -754,7 +808,7 @@ function renderAnimeVault(movie){
 /* =============== Home data =============== */
 async function loadHome(){
   try{
-    ['row-hot','row-hq','row-tq','row-usuk','row-bo','row-le','row-anime'].forEach(id=>skeletonRow(id));
+    ['row-hot','row-hq','row-tq','row-usuk','row-bo','row-le','row-anime','row-foru','row-upcoming','row-imdb'].forEach(id=>skeletonRow(id));
     loadAnimeVault();
 
     // Hot
@@ -784,6 +838,11 @@ async function loadHome(){
     loadBy(`${API_V1}/danh-sach/phim-bo?page=1&limit=36`,'row-bo');
     loadBy(`${API_V1}/danh-sach/phim-le?page=1&limit=36`,'row-le');
 
+    // ✨ Dải nâng cấp
+    loadRecommendations(hot);
+    loadUpcoming(hot);
+    loadTopIMDb(hot);
+
     // BXH
     (async()=>{
       try{
@@ -806,8 +865,77 @@ async function loadByTry(urls,cid){
   for(const u of urls){ try{ const d=normList(await fetchJSON(u)); if(d.items?.length){ fillRow(cid,d.items,d.cdn); return; } }catch{} }
 }
 
+/* ---- Dải: Đề xuất cho bạn ---- */
+async function loadRecommendations(hotData){
+  skeletonRow('row-foru');
+  let items=[], cdn='https://phimimg.com';
+  const h=hisList();
+  if(h && h.length){
+    const slugs=h.slice(0,3).map(x=>x.slug);
+    const catSet=new Set();
+    for(const s of slugs){
+      try{
+        const d=await fetchJSON(`${API_BASE}/phim/${s}`);
+        (d.movie?.category||[]).forEach(c=>catSet.add(c.slug||c.name));
+      }catch{}
+    }
+    for(const cat of Array.from(catSet).slice(0,3)){
+      try{
+        const d=normList(await fetchJSON(`${API_V1}/the-loai/${cat}?page=1&limit=36`));
+        cdn=d.cdn; items=items.concat(d.items.slice(0,12));
+      }catch{}
+    }
+  }
+  if(!items.length && hotData){ items=hotData.items.slice(0,12); cdn=hotData.cdn; }
+  const seen=new Set(), uniq=[];
+  items.forEach(m=>{ if(!seen.has(m.slug)){ seen.add(m.slug); uniq.push(m); }});
+  fillRow('row-foru', uniq.slice(0,12), cdn);
+}
+
+/* ---- Dải: Sắp chiếu ---- */
+async function loadUpcoming(hotData){
+  skeletonRow('row-upcoming');
+  const sources=[
+    `${API_V1}/danh-sach/phim-le?page=1&limit=36`,
+    `${API_V1}/danh-sach/phim-le?page=2&limit=36`,
+    `${API_V1}/danh-sach/phim-bo?page=1&limit=36`
+  ];
+  let list=[], cdn='https://phimimg.com';
+  for(const u of sources){ try{ const d=normList(await fetchJSON(u)); cdn=d.cdn; list=list.concat(d.items); }catch{} }
+  const nowY=new Date().getFullYear();
+  const up=list.filter(m=>{
+    const q=(m.quality||'').toLowerCase(), ec=(m.episode_current||'').toLowerCase(), st=(m.status||'').toLowerCase();
+    return q.includes('trailer') || ec.includes('trailer') || st.includes('trailer') || (m.year && m.year>=nowY);
+  }).sort((a,b)=>{
+    const at=(''+a.quality).toLowerCase().includes('trailer')?1:0;
+    const bt=(''+b.quality).toLowerCase().includes('trailer')?1:0;
+    if(bt-at) return bt-at;
+    return (b.year||0)-(a.year||0);
+  });
+  if(!up.length && hotData){ fillRow('row-upcoming', hotData.items.slice(12,24), hotData.cdn); }
+  else fillRow('row-upcoming', up.slice(0,12), cdn);
+}
+
+/* ---- Dải: Top IMDb ---- */
+async function loadTopIMDb(hotData){
+  skeletonRow('row-imdb');
+  const sources=[
+    `${API_V1}/danh-sach/phim-le?page=1&limit=36`,
+    `${API_V1}/danh-sach/phim-bo?page=1&limit=36`,
+    `${API_BASE}/danh-sach/phim-moi-cap-nhat-v3?page=1`
+  ];
+  let list=[], cdn='https://phimimg.com';
+  for(const u of sources){ try{ const d=normList(await fetchJSON(u)); cdn=d.cdn; list=list.concat(d.items); }catch{} }
+  list=list.filter(m=>typeof m.imdb==='number').sort((a,b)=>(b.imdb||0)-(a.imdb||0));
+  if(!list.length && hotData){ fillRow('row-imdb', hotData.items.slice(0,12), hotData.cdn); }
+  else fillRow('row-imdb', list.slice(0,12), cdn);
+}
+
 /* =============== Explore/Search =============== */
 let explorePage=1, exploreType='phim-le', exploreKey='', exploreTotal=1, exploreCDN='https://phimimg.com';
+const exploreFilters={cat:'',country:'',year:'',sort:'new'};
+const TAX={cats:[],countries:[]};
+
 function setView(id){
   ['home','explore','fav','his'].forEach(v=>document.getElementById(v).style.display=(v===id)?'block':'none');
   requestAnimationFrame(()=>window.scrollTo({top:0,behavior:'auto'}));
@@ -842,10 +970,68 @@ document.querySelectorAll('.chip[data-go]').forEach(c=>{
 });
 document.querySelectorAll('.chip[data-key]').forEach(c=>c.onclick=()=>{const k=c.dataset.key;startExplore(k,`Kết quả: “${k}”`);location.hash='#search='+encodeURIComponent(k)});
 
+/* Taxonomy cho bộ lọc */
+async function fetchTaxonomies(){
+  try{
+    const catsRaw=await fetchJSON(`${API_V1}/the-loai`);
+    const c=(catsRaw?.data?.items)||catsRaw?.items||catsRaw||[];
+    let cats=c.map(x=>({slug:x.slug||x.key||x.name?.toLowerCase()?.replace(/\s+/g,'-')||'', name:x.name||x.title||x.key||''}))
+              .filter(x=>x.slug&&x.name);
+    // ❌ Loại "hoat-hinh", ✅ đảm bảo có "anime"
+    cats=cats.filter(x=>x.slug!=='hoat-hinh');
+    if(!cats.some(x=>x.slug==='anime')) cats.push({slug:'anime',name:'Anime'});
+    TAX.cats=cats;
+  }catch{
+    // Fallback không có "Hoạt hình"
+    TAX.cats=[
+      {slug:'hanh-dong',name:'Hành động'},{slug:'vien-tuong',name:'Viễn tưởng'},
+      {slug:'hai-huoc',name:'Hài hước'},{slug:'kinh-di',name:'Kinh dị'},
+      {slug:'tam-ly',name:'Tâm lý'},{slug:'tinh-cam',name:'Tình cảm'},
+      {slug:'anime',name:'Anime'}
+    ];
+  }
+  try{
+    const qgRaw=await fetchJSON(`${API_V1}/quoc-gia`);
+    const q=(qgRaw?.data?.items)||qgRaw?.items||qgRaw||[];
+    TAX.countries=q.map(x=>({slug:x.slug||x.key||x.name?.toLowerCase()?.replace(/\s+/g,'-')||'', name:x.name||x.title||x.key||''})).filter(x=>x.slug&&x.name);
+  }catch{
+    TAX.countries=[{slug:'au-my',name:'Âu Mỹ'},{slug:'han-quoc',name:'Hàn Quốc'},{slug:'trung-quoc',name:'Trung Quốc'},{slug:'nhat-ban',name:'Nhật Bản'},{slug:'thai-lan',name:'Thái Lan'},{slug:'viet-nam',name:'Việt Nam'}];
+  }
+}
+function buildFilterOptions(){
+  const fCat=$('#fCat'), fCountry=$('#fCountry'), fYear=$('#fYear');
+  if(!TAX.cats.length || !TAX.countries.length) return;
+  fCat.innerHTML='<option value="">Tất cả</option>'+TAX.cats.map(c=>`<option value="${c.slug}">${c.name}</option>`).join('');
+  fCountry.innerHTML='<option value="">Tất cả</option>'+TAX.countries.map(c=>`<option value="${c.slug}">${c.name}</option>`).join('');
+  const yNow=new Date().getFullYear();
+  const ys=['<option value="">Tất cả</option>'];
+  for(let y=yNow;y>=1990;y--) ys.push(`<option value="${y}">${y}</option>`);
+  fYear.innerHTML=ys.join('');
+  fCat.value=exploreFilters.cat||''; fCountry.value=exploreFilters.country||''; fYear.value=exploreFilters.year||''; $('#fSort').value=exploreFilters.sort||'new';
+}
+async function ensureFilterUI(){
+  if($('#filterBar').dataset.ready==='1') return;
+  await fetchTaxonomies();
+  buildFilterOptions();
+  $('#filterBar').dataset.ready='1';
+
+  $('#fCat').onchange=()=>{ exploreFilters.cat=$('#fCat').value; startExplore('filters','Kết quả lọc'); };
+  $('#fCountry').onchange=()=>{ exploreFilters.country=$('#fCountry').value; startExplore('filters','Kết quả lọc'); };
+  $('#fYear').onchange=()=>{ exploreFilters.year=$('#fYear').value; startExplore('filters','Kết quả lọc'); };
+  $('#fSort').onchange=()=>{ exploreFilters.sort=$('#fSort').value; startExplore('filters','Kết quả lọc'); };
+  $('#fReset').onclick=()=>{ exploreFilters.cat=''; exploreFilters.country=''; exploreFilters.year=''; exploreFilters.sort='new'; buildFilterOptions(); startExplore('filters','Khám phá'); };
+}
+
 function exploreUrl(page){
   if(exploreKey){
     const p=new URLSearchParams({keyword:exploreKey,page,limit:36});
     return `${API_V1}/tim-kiem?${p}`;
+  }
+  if(exploreFilters.cat){
+    return `${API_V1}/the-loai/${exploreFilters.cat}?page=${page}&limit=36`;
+  }
+  if(exploreFilters.country){
+    return `${API_V1}/quoc-gia/${exploreFilters.country}?page=${page}&limit=36`;
   }
   if(exploreType.startsWith('cat:')){
     const slug=exploreType.split(':')[1];
@@ -857,12 +1043,25 @@ function exploreUrl(page){
   return `${API_V1}/danh-sach/${exploreType}?page=${page}&limit=36`;
 }
 
-/* Fallback thông minh cho Anime/Hoạt hình */
+/* Fallback thông minh cho Anime/Hoạt hình + filters */
 function exploreCandidates(page){
   const urls=[];
   if(exploreKey){
     const p=new URLSearchParams({keyword:exploreKey,page,limit:36});
     urls.push(`${API_V1}/tim-kiem?${p}`);
+    return urls;
+  }
+  if(exploreFilters.cat){
+    urls.push(`${API_V1}/the-loai/${exploreFilters.cat}?page=${page}&limit=36`);
+    // ✅ Nếu chọn Anime, thử thêm 2 nguồn dự phòng
+    if(exploreFilters.cat==='anime'){
+      urls.push(`${API_V1}/the-loai/hoat-hinh?page=${page}&limit=36`);
+      urls.push(`${API_V1}/danh-sach/hoat-hinh?page=${page}&limit=36`);
+    }
+    return urls;
+  }
+  if(exploreFilters.country){
+    urls.push(`${API_V1}/quoc-gia/${exploreFilters.country}?page=${page}&limit=36`);
     return urls;
   }
   if(exploreType.startsWith('cat:')){
@@ -883,11 +1082,33 @@ function exploreCandidates(page){
   return urls;
 }
 
+function applyFilters(items){
+  let arr=[...(items||[])];
+  if(exploreFilters.country){
+    arr=arr.filter(m=>{
+      const c=(m.country||[]).map(x=>(x.slug||'').toLowerCase());
+      return c.includes(exploreFilters.country.toLowerCase());
+    });
+  }
+  if(exploreFilters.year){
+    arr=arr.filter(m=>String(m.year||'')===String(exploreFilters.year));
+  }
+  switch(exploreFilters.sort){
+    case 'year': arr.sort((a,b)=>(b.year||0)-(a.year||0)); break;
+    case 'imdb': arr.sort((a,b)=>(b.imdb||0)-(a.imdb||0)); break;
+    case 'az': arr.sort((a,b)=>( (a.name||a.origin_name||'').localeCompare(b.name||b.origin_name||'') )); break;
+    default: break;
+  }
+  return arr;
+}
+
 async function startExplore(typeOrKey, title){
   setView('explore'); $('#grid').innerHTML=''; $('#exploreTitle').textContent=title||'Khám phá';
+  await ensureFilterUI();
   explorePage=1; exploreTotal=2; exploreCDN='https://phimimg.com'; exploreKey=''; exploreType='phim-le';
   if(typeof typeOrKey==='string'){
-    if(typeOrKey.startsWith('cat:')) exploreType=typeOrKey;
+    if(typeOrKey==='filters'){ /* giữ filters */ }
+    else if(typeOrKey.startsWith('cat:')) exploreType=typeOrKey;
     else if(['phim-le','phim-bo','tv-shows','hoat-hinh'].includes(typeOrKey)) exploreType=typeOrKey;
     else if(['han-quoc','trung-quoc','au-my','nhat-ban','viet-nam'].includes(typeOrKey)) exploreType=typeOrKey;
     else exploreKey=typeOrKey;
@@ -917,8 +1138,9 @@ async function loadMoreExplore(){
       return;
     }
     exploreCDN=d.cdn; exploreTotal=d.tp||exploreTotal||explorePage;
+    let items=applyFilters(d.items||[]);
     if(explorePage===1) grid.innerHTML='';
-    d.items.forEach(m=>grid.appendChild(card(m,exploreCDN)));
+    items.forEach(m=>grid.appendChild(card(m,exploreCDN)));
     explorePage++;
   }catch{
     if(explorePage===1) $('#grid').innerHTML='<p style="color:#9aa4b5">Không thể tải danh sách. Thử lại sau.</p>';
@@ -967,6 +1189,12 @@ async function openDetail(slug){
     currentEps=(d.episodes||[]).flatMap(sv=>(sv.server_data||[]).map((ep,i)=>({name:ep.name||`Tập ${i+1}`,embed:ep.link_embed,m3u8:ep.link_m3u8})));
     const wrap=$('#eps'); wrap.innerHTML=''; currentEp=null;
     currentEps.forEach((ep,idx)=>{const b=document.createElement('button');b.textContent=ep.name; b.onclick=()=>selectEp(ep,b); if(idx===0){b.classList.add('sel');currentEp=ep;} wrap.appendChild(b)});
+
+    // Cast
+    renderCast(m.actor);
+
+    // Similar
+    loadSimilar(m);
 
     $('#btnPlayNow').textContent=currentEp?`Xem ngay (${currentEp.name})`:'Xem ngay';
     $('#btnPlayNow').onclick=()=>{ if(currentEp) play(currentEp); else toast('Chưa có tập'); };
@@ -1071,6 +1299,39 @@ function play(ep){
 }
 function playEmbed(u){
   $('#player').innerHTML=`<iframe src="${u}" allow="autoplay; encrypted-media; picture-in-picture" referrerpolicy="no-referrer" allowfullscreen></iframe>`;
+}
+
+/* Diễn viên & Gợi ý tương tự */
+function renderCast(actorField){
+  const castEl=$('#cast'); castEl.innerHTML='';
+  let names=[];
+  if(Array.isArray(actorField)) names=actorField;
+  else if(typeof actorField==='string') names=actorField.split(',').map(s=>s.trim());
+  names=names.filter(Boolean);
+  if(!names.length){ castEl.innerHTML='<span style="color:#9aa4b5">Đang cập nhật…</span>'; return; }
+  names.slice(0,20).forEach(n=>{
+    const sp=document.createElement('span'); sp.className='person'; sp.textContent=n; castEl.appendChild(sp);
+  });
+}
+async function loadSimilar(movie){
+  const cat=(movie?.category||[])[0]?.slug || (movie?.category||[])[0]?.name || '';
+  const y=movie.year||'';
+  const rowId='row-similar'; skeletonRow(rowId);
+  let items=[], cdn='https://phimimg.com';
+  if(cat){
+    try{
+      const d=normList(await fetchJSON(`${API_V1}/the-loai/${cat}?page=1&limit=36`));
+      cdn=d.cdn; items=d.items||[];
+    }catch{}
+  }
+  if(items.length && y){ items=items.filter(x=>Math.abs((x.year||0)-y)<=1); }
+  items=items.filter(x=>x.slug!==movie.slug);
+  if(!items.length){
+    const q=movie?.country?.[0]?.slug; 
+    if(q){ try{ const d=normList(await fetchJSON(`${API_V1}/quoc-gia/${q}?page=1&limit=36`)); cdn=d.cdn; items=(d.items||[]).filter(x=>x.slug!==movie.slug); }catch{} }
+  }
+  fillRow(rowId, items.slice(0,12), cdn);
+  setupRows();
 }
 
 /* =============== Fav & History =============== */
