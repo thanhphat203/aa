@@ -81,7 +81,7 @@ a{color:inherit;text-decoration:none}
   background:rgba(255,255,255,.06);cursor:pointer}
 .chip:hover{border-color:#7c3aed}
 
-/* ===== Hero (nâng cấp) ===== */
+/* ===== Hero ===== */
 .hero{position:relative;min-height:220px;padding:22px 0 0;margin-bottom:2px}
 .hero__card{
   position:relative;border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,.06);
@@ -91,9 +91,7 @@ a{color:inherit;text-decoration:none}
 .hero__overlay{position:absolute;inset:0;background:
   radial-gradient(1200px 400px at -5% -20%, rgba(96,165,250,.20), transparent 60%),
   radial-gradient(900px 420px at 110% 100%, rgba(167,139,250,.18), transparent 60%),
-  linear-gradient(90deg,rgba(8,12,28,.94),rgba(8,12,28,.72),rgba(8,12,28,.25));
-  mix-blend-mode:normal
-}
+  linear-gradient(90deg,rgba(8,12,28,.94),rgba(8,12,28,.72),rgba(8,12,28,.25))}
 .hero__card::after{
   content:"";position:absolute;inset:0;pointer-events:none;opacity:.17;
   background:
@@ -132,7 +130,6 @@ a{color:inherit;text-decoration:none}
 .sec h2{font-size:20px;margin:0;color:#dbeafe;text-shadow:0 2px 14px rgba(59,130,246,.25)}
 .row{position:relative}
 
-/* Hàng ngang */
 .movie-row{
   display:flex;gap:14px;overflow-x:auto;scroll-behavior:smooth;
   padding:2px 2px 26px;
@@ -140,14 +137,13 @@ a{color:inherit;text-decoration:none}
   touch-action: pan-y;
 }
 .movie-row::-webkit-scrollbar{height:0}
-/* mép tối mềm  */
 .row::before,.row::after{
   content:"";position:absolute;top:0;bottom:22px;width:70px;pointer-events:none;z-index:1
 }
 .row::before{left:0;background:linear-gradient(90deg, rgba(11,16,32,1), rgba(11,16,32,0))}
 .row::after{right:0;background:linear-gradient(270deg, rgba(11,16,32,1), rgba(11,16,32,0))}
 
-/* Nút mũi tên kính mờ (thay scrubber) */
+/* Nút mũi tên */
 .row .arrow{
   position:absolute;top:40%;transform:translateY(-50%);z-index:3;
   width:40px;height:40px;border-radius:999px;display:grid;place-items:center;
@@ -236,13 +232,22 @@ a{color:inherit;text-decoration:none}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
 #explore{padding-bottom:22px}
 
+/* ===== Ads ===== */
+.ad-slot{position:relative;display:block;margin:14px 0;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03)}
+.ad-slot .ad-label{position:absolute;top:6px;left:8px;font-size:11px;color:#9aa4b5;background:rgba(0,0,0,.45);padding:3px 6px;border-radius:6px;border:1px solid rgba(255,255,255,.1)}
+.ad-slot .placeholder{display:grid;place-items:center;min-height:120px;color:#9aa4b5}
+.ad-slot iframe, .ad-slot img{display:block;width:100%;height:auto}
+.ad-sticky{position:fixed;left:10px;right:10px;bottom:10px;z-index:9998;background:#0f172a;border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:6px;box-shadow:0 10px 24px rgba(0,0,0,.35)}
+.ad-close{position:absolute;right:6px;top:6px;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.15);color:#e5e7eb;border-radius:8px;padding:2px 6px;cursor:pointer}
+@media(min-width:1024px){ .ad-sticky{display:none} }
+
 /* Skeleton & toast */
 .skeleton{position:relative;overflow:hidden;background:#0f162b;border-radius:16px;height:0;padding-top:150%}
 .skeleton::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.08),transparent);transform:translateX(-100%);animation:sh 1.4s infinite}
 @keyframes sh{to{transform:translateX(100%)}}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:22px;background:#0b1220;border:1px solid #22304c;color:#fff;padding:10px 14px;border-radius:10px;box-shadow:0 10px 24px rgba(0,0,0,.35);z-index:99999}
 
-/* Popup & Player (rút gọn) */
+/* Popup & Player */
 .popup{position:fixed;inset:0;display:none;justify-content:center;align-items:flex-start;background:rgba(0,0,0,.9);z-index:9990;overflow:auto;padding:30px 12px}
 .popup-content{width:100%;max-width:1180px;display:flex;flex-direction:column;gap:12px}
 .player{position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.06)}
@@ -283,11 +288,27 @@ a{color:inherit;text-decoration:none}
 .toolbar select{background:#0b1430;border:1px solid rgba(255,255,255,.12);color:#e5e7eb;border-radius:8px;padding:8px 10px;min-width:120px}
 .toolbar .sep{width:1px;height:24px;background:rgba(255,255,255,.1);margin:0 4px}
 
+/* Footer */
 footer{background:var(--panel);color:var(--muted);padding:24px 12px;border-top:1px solid rgba(255,255,255,.08);margin-top:36px;text-align:center}
 footer .footer-content{max-width:900px;margin:0 auto}
 footer a{color:#93c5fd}
 
-/* Tôn trọng người dùng giảm chuyển động */
+/* Footer badge (Hoàng Sa & Trường Sa) */
+.footer-badge{
+  display:inline-flex;align-items:center;gap:10px;
+  margin-top:12px;padding:8px 14px;border-radius:999px;
+  background:linear-gradient(180deg,#b91c1c,#7f1d1d);
+  color:#fff;border:1px solid rgba(255,255,255,.12);
+  box-shadow:0 6px 18px rgba(239,68,68,.28);
+  font-weight:800
+}
+.footer-badge .star{
+  width:20px;height:20px;border-radius:50%;
+  display:grid;place-items:center;flex:0 0 auto;
+  background:#facc15;color:#7c2d12;font-size:12px;line-height:1
+}
+
+/* Reduce motion */
 @media (prefers-reduced-motion: reduce){
   .movie:hover .poster{transform:none}
   .shine::after{display:none}
@@ -350,6 +371,9 @@ footer a{color:#93c5fd}
     <button class="chip" data-key="Tâm lý">Tâm lý</button>
   </div>
 
+  <!-- Billboard Ad -->
+  <div id="adTopBillboard" class="ad-slot" aria-label="Quảng cáo"></div>
+
   <!-- ===== Kho Tàng Anime Mới Nhất ===== -->
   <section id="animeVaultSec" class="av-sec">
     <div class="hdrline">
@@ -390,6 +414,9 @@ footer a{color:#93c5fd}
 
   <div class="sec"><h2>🔥 Phim Hot</h2></div>
   <div class="row"><div id="row-hot" class="movie-row"></div></div>
+
+  <!-- In-page Ad giữa trang -->
+  <div id="adMidHome" class="ad-slot" aria-label="Quảng cáo"></div>
 
   <!-- Rankings -->
   <div class="sec"><h2>Bảng xếp hạng hôm nay</h2></div>
@@ -478,6 +505,9 @@ footer a{color:#93c5fd}
       <div class="loading" id="loading"></div>
     </div>
 
+    <!-- Ad dưới player -->
+    <div id="adPlayer" class="ad-slot" aria-label="Quảng cáo"></div>
+
     <div class="pb">
       <div class="pi">
         <h4>Giới thiệu</h4>
@@ -491,10 +521,22 @@ footer a{color:#93c5fd}
   </div>
 </div>
 
+<!-- Sticky mobile ad -->
+<div id="adSticky" class="ad-sticky" style="display:none">
+  <span class="ad-close" id="adStickyClose">✕</span>
+  <div id="adStickyInner"></div>
+</div>
+
 <footer>
   <div class="footer-content">
-    <p> PHIM HAY - PHIM MỚI - CHẤT LƯỢNG CẬP NHẬT MỖI NGÀY.</p>
+    <p> PHIM HAY - PHIM MỚI - CHẤT LƯỢNG CẬP NHẬT MỖI NGÀY !</p>
     <p>© 2025 THANHPHAT</p>
+
+    <!-- Huy hiệu thông điệp biển đảo -->
+    <div class="footer-badge" role="note" aria-label="Hoàng Sa &amp; Trường Sa là của Việt Nam!">
+      <span class="star" aria-hidden="true">★</span>
+      <span>Hoàng Sa &amp; Trường Sa là của Việt Nam!</span>
+    </div>
   </div>
 </footer>
 
@@ -583,7 +625,7 @@ function card(movie, cdn){
       </div>
     </div>`;
 
-  // Tilt (rAF throttle)
+  // Tilt
   const pEl=()=>div.querySelector('.poster'); let raf=0, lastX=0, lastY=0;
   div.addEventListener('pointermove',e=>{
     lastX=e.clientX; lastY=e.clientY; if(raf) return;
@@ -628,7 +670,7 @@ function renderRank(listEl, items, cdn){
   });
 }
 
-/* ===== Hero logic (dải thumbnail) ===== */
+/* ===== Hero logic ===== */
 const heroState={list:[],cdn:'https://phimimg.com',current:null};
 function buildHero(m,cdn){
   if(!m) return;
@@ -655,7 +697,7 @@ function renderHeroStrip(){
   });
 }
 
-/* =============== Anime Vault logic =============== */
+/* =============== Anime Vault =============== */
 const animeState={list:[],cdn:'https://phimimg.com',current:null};
 async function loadAnimeVault(){
   const urls=[
@@ -671,7 +713,6 @@ async function loadAnimeVault(){
   }
   renderAnimeVault(animeState.list[0]);
 }
-// nút "Xem thêm" ưu tiên Hoạt hình (ổn định hơn)
 $('#goMoreAnime').onclick=()=>startExplore('cat:hoat-hinh','Thể loại: Hoạt hình');
 
 function badgeEl(t){const s=document.createElement('span');s.className='badge2';s.textContent=t;return s}
@@ -1060,7 +1101,7 @@ function renderHistory(){
   if(!hisList().length) grid.innerHTML='<p style="color:#9aa4b5">Chưa có lịch sử xem.</p>';
 }
 
-/* =============== Row Enhancer: drag + arrows (không scrubber) =============== */
+/* =============== Row Enhancer =============== */
 function setupRows(){
   $$('.row').forEach(w=>{
     const row=w.querySelector('.movie-row');
@@ -1093,15 +1134,75 @@ function setupRows(){
   });
 }
 
-/* Routing (hash) */
+/* Routing */
 window.addEventListener('hashchange',()=>{
   const h=location.hash;
   if(h.startsWith('#/p/')) openDetail(h.split('/p/')[1]);
   else if(h.startsWith('#search=')){ const kw=decodeURIComponent(h.split('=')[1]||''); $('#q').value=kw; startExplore(kw,`Kết quả: “${kw}”`) }
 });
 
+/* =============== Ads lazy render =============== */
+function renderAdPlaceholder(el, text='Quảng cáo'){
+  el.innerHTML = `<div class="ad-label">Quảng cáo</div><div class="placeholder">${text}</div>`;
+}
+function mountAd(el, html, placeholderText){
+  if(!el) return;
+  if(html && html.trim()){
+    el.innerHTML = html;
+  }else{
+    renderAdPlaceholder(el, placeholderText);
+  }
+}
+function queueAd(id, placeholderText){
+  const el = document.getElementById(id);
+  if(!el) return;
+  const obs = new IntersectionObserver((entries,observer)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        observer.unobserve(el);
+        const code = (AD_CONFIG.slots && AD_CONFIG.slots[id]) || '';
+        mountAd(el, code, placeholderText);
+      }
+    });
+  },{rootMargin:'600px'});
+  obs.observe(el);
+}
+function initStickyAd(){
+  if(!AD_CONFIG.enabled) return;
+  if(window.matchMedia('(min-width:1024px)').matches) return; // mobile only
+  if(localStorage.getItem('adStickyClosed')==='1') return;
+
+  const el = $('#adSticky'), inner=$('#adStickyInner');
+  const code = AD_CONFIG.slots && AD_CONFIG.slots.adSticky;
+  setTimeout(()=>{
+    if(code && code.trim()){ inner.innerHTML=code; } else { inner.innerHTML='<div class="placeholder">Sticky 320×50 / 320×100</div>'; }
+    el.style.display='block';
+  }, 2600);
+  $('#adStickyClose').onclick=()=>{ el.style.display='none'; localStorage.setItem('adStickyClosed','1'); };
+}
+
+/* ==== AD CONFIG (dán mã bên phải dấu backtick) ==== */
+const AD_CONFIG = {
+  enabled: true,
+  slots: {
+    adTopBillboard: ``,
+    adMidHome: ``,
+    adPlayer: ``,
+    adSticky: ``
+  }
+};
+
+function initAds(){
+  if(!AD_CONFIG.enabled) return;
+  queueAd('adTopBillboard','Billboard 970×250 / 728×90');
+  queueAd('adMidHome','In-page 728×90 / 468×60');
+  queueAd('adPlayer','Below Player 728×90 / 468×60');
+  initStickyAd();
+}
+
 /* Kickoff */
 loadHome();
+initAds();
 </script>
 </body>
 </html>
