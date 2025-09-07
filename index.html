@@ -23,7 +23,7 @@
 :root{
   --bg:#0b1020;--panel:#11172c;--panel2:#0e152b;--ring:#2563eb;
   --accent:#e50914;--accent2:#7c3aed;--text:#f5f7fb;--muted:#97a2b3;
-  --hdr-h:68px;--container:1220px;
+  --hdr-h:68px;--container:1280px;
 }
 @media(max-width:640px){:root{--hdr-h:72px}}
 *{box-sizing:border-box}
@@ -140,12 +140,43 @@ a{color:inherit;text-decoration:none}
 .pills{display:flex;gap:6px;flex-wrap:wrap}
 .pill{font-size:11px;padding:3px 6px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1)}
 
-/* ===== Genres (categories) ===== */
-.genres{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:6px 0 2px}
-@media(min-width:800px){.genres{grid-template-columns:repeat(4,1fr)}}
-.genre{display:block;text-align:left;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.08);
-  background:rgba(255,255,255,.05);cursor:pointer;color:#e5e7eb;font-weight:700}
-.genre:hover{border-color:#7c3aed;background:rgba(124,58,237,.08)}
+/* ===== Anime Vault ===== */
+.av-sec .hdrline{display:flex;align-items:center;gap:10px;margin:18px 2px 12px}
+.av-sec .hdrline h2{font-size:22px;margin:0}
+.av-sec .go{display:inline-grid;place-items:center;width:32px;height:32px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);font-weight:800}
+
+.anivault{
+  position:relative;border-radius:20px;overflow:hidden;
+  border:1px solid rgba(255,255,255,.08);
+  background:#0b1224;min-height:360px;
+}
+.anivault .bg{position:absolute;inset:0;background-size:cover;background-position:right center;filter:saturate(1.15) contrast(1.05);opacity:.52}
+.anivault .overlay{position:absolute;inset:0;
+  background:linear-gradient(90deg,rgba(8,12,28,.96) 0 44%, rgba(8,12,28,.72) 60%, rgba(8,12,28,.15) 82%)}
+.anivault .inner{position:relative;display:grid;grid-template-columns:1fr;gap:12px;padding:22px}
+.av-title{font-size:28px;font-weight:800;margin:0}
+.av-sub{color:#cfd6e6;margin-top:-6px}
+.av-badges,.av-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.badge2{font-size:12px;font-weight:800;padding:5px 9px;border-radius:10px;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)}
+.tag{font-size:12px;padding:5px 9px;border-radius:999px;background:#121a36;border:1px solid rgba(255,255,255,.08)}
+.av-desc{color:#dde4f7;max-width:720px;line-height:1.65;margin-top:8px}
+.av-cta{display:flex;gap:14px;margin-top:14px}
+.av-cta .cbtn{width:64px;height:64px;border-radius:999px;display:grid;place-items:center;font-size:22px;
+  border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);cursor:pointer}
+.av-cta .play{background:linear-gradient(135deg,#f59e0b,#fde68a);color:#111827;border:0;font-weight:900}
+.av-strip{display:flex;gap:10px;overflow:auto;padding:10px 4px 16px;margin:8px -4px 0}
+.av-thumb{flex:0 0 auto;width:82px}
+.av-thumb .box{position:relative;border-radius:12px;overflow:hidden;background:#0e1426;border:1px solid rgba(255,255,255,.06)}
+.av-thumb img{display:block;width:82px;height:116px;object-fit:cover}
+.av-thumb.active .box{outline:2px solid #93c5fd}
+.av-thumb .cap{position:absolute;inset:auto 6px 6px 6px;font-size:11px;background:rgba(0,0,0,.6);padding:2px 6px;border-radius:8px;display:inline-block}
+
+@media(max-width:740px){
+  .av-title{font-size:22px}
+  .anivault{min-height:320px}
+}
 
 /* Rankings */
 .rank-wrap{display:grid;grid-template-columns:1fr;gap:12px}
@@ -168,7 +199,7 @@ a{color:inherit;text-decoration:none}
 @keyframes sh{to{transform:translateX(100%)}}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:22px;background:#0b1220;border:1px solid #22304c;color:#fff;padding:10px 14px;border-radius:10px;box-shadow:0 10px 24px rgba(0,0,0,.35);z-index:99999}
 
-/* Popup & Player (rút gọn phần không đổi) */
+/* Popup & Player */
 .popup{position:fixed;inset:0;display:none;justify-content:center;align-items:flex-start;background:rgba(0,0,0,.9);z-index:9990;overflow:auto;padding:30px 12px}
 .popup-content{width:100%;max-width:1180px;display:flex;flex-direction:column;gap:12px}
 .player{position:relative;width:100%;aspect-ratio:16/9;background:#000;border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,.06)}
@@ -218,6 +249,7 @@ footer a{color:#93c5fd}
   .hero__poster{display:none}
   .detail-hero img{display:none}
 }
+
 /* Tôn trọng người dùng giảm chuyển động */
 @media (prefers-reduced-motion: reduce){
   .movie:hover .poster{transform:none}
@@ -269,7 +301,7 @@ footer a{color:#93c5fd}
     </div>
   </div>
 
-  <!-- Chips nhanh -->
+  <!-- Chips -->
   <div class="chips">
     <button class="chip" data-key="Marvel">Marvel</button>
     <button class="chip" data-key="4K">4K</button>
@@ -279,9 +311,30 @@ footer a{color:#93c5fd}
     <button class="chip" data-key="Tâm lý">Tâm lý</button>
   </div>
 
-  <!-- Genres -->
-  <div class="sec"><h2>Thể loại nổi bật</h2></div>
-  <div id="genres" class="genres"></div>
+  <!-- ===== Kho Tàng Anime Mới Nhất ===== -->
+  <section id="animeVaultSec" class="av-sec">
+    <div class="hdrline">
+      <h2>Kho Tàng Anime Mới Nhất</h2>
+      <button class="go" id="goMoreAnime" title="Xem thêm">›</button>
+    </div>
+    <div class="anivault" id="animeVault" role="region" aria-label="Kho Tàng Anime">
+      <div class="bg" id="avBg"></div>
+      <div class="overlay"></div>
+      <div class="inner">
+        <h3 class="av-title" id="avTitle">Đang tải…</h3>
+        <div class="av-sub" id="avSub"></div>
+        <div class="av-badges" id="avBadges"></div>
+        <div class="av-tags" id="avTags"></div>
+        <div class="av-desc" id="avDesc"></div>
+        <div class="av-cta">
+          <button class="cbtn play" id="avPlay" title="Xem ngay">▶</button>
+          <button class="cbtn" id="avFav" title="Lưu">❤</button>
+          <button class="cbtn" id="avInfo" title="Thông tin">i</button>
+        </div>
+        <div class="av-strip" id="avStrip"></div>
+      </div>
+    </div>
+  </section>
 
   <!-- Rows -->
   <div class="sec"><h2>Phim Hàn Quốc mới</h2><a class="chip" data-go="quocgia-hq">Xem thêm ›</a></div>
@@ -290,10 +343,10 @@ footer a{color:#93c5fd}
   <div class="sec"><h2>Phim Trung Quốc mới</h2><a class="chip" data-go="quocgia-tq">Xem thêm ›</a></div>
   <div class="row"><div id="row-tq" class="movie-row"></div></div>
 
-  <div class="sec"><h2>Phim US-UK mới</h2><a class="chip" data-go="quocgia-usuk">Xem thêm ›</a></div>
+  <div class="sec"><h2>Phim US–UK mới</h2><a class="chip" data-go="quocgia-usuk">Xem thêm ›</a></div>
   <div class="row"><div id="row-usuk" class="movie-row"></div></div>
 
-  <div class="sec"><h2>Anime & Hoạt hình mới</h2><a class="chip" data-go="hoat-hinh">Xem thêm ›</a></div>
+  <div class="sec"><h2>Anime & Hoạt hình mới</h2><a class="chip" data-go="cat-hoat-hinh">Xem thêm ›</a></div>
   <div class="row"><div id="row-anime" class="movie-row"></div></div>
 
   <div class="sec"><h2>🔥 Phim Hot</h2></div>
@@ -341,7 +394,6 @@ footer a{color:#93c5fd}
   <span class="close" id="close" title="Đóng (Esc)">✕</span>
 
   <div class="popup-content">
-    <!-- header detail + CTA -->
     <div class="detail-hero">
       <div class="bg" id="dBg"></div>
       <div class="overlay"></div>
@@ -360,7 +412,6 @@ footer a{color:#93c5fd}
       </div>
     </div>
 
-    <!-- toolbar -->
     <div class="toolbar" id="playerToolbar" style="display:none">
       <label>Chất lượng
         <select id="qualitySelect" aria-label="Chọn chất lượng">
@@ -384,12 +435,10 @@ footer a{color:#93c5fd}
       <button id="btnFS" class="btn btn-ghost" title="Toàn màn hình">⤢</button>
     </div>
 
-    <!-- player -->
     <div id="player" class="player">
       <div class="loading" id="loading"></div>
     </div>
 
-    <!-- mô tả + eps -->
     <div class="pb">
       <div class="pi">
         <h4>Giới thiệu</h4>
@@ -417,13 +466,13 @@ const API_V1=API_BASE+'/v1/api';
 const $=s=>document.querySelector(s);const $$=s=>document.querySelectorAll(s);
 const toast=(m,t=1800)=>{const d=document.createElement('div');d.className='toast';d.textContent=m;document.body.appendChild(d);setTimeout(()=>d.remove(),t)};
 
-/* Ảnh */
+/* Ảnh + fallback chuỗi */
 function absUrl(p,cdn='https://phimimg.com'){
   if(!p) return '';
   if(/^https?:\/\//i.test(p)) return p;
   if(p.startsWith('//')) return (location.protocol||'https:')+p;
   if(p.startsWith('/upload/')) return cdn.replace(/\/+$/,'')+p;
-  return cdn.replace(/\/+$/,'')+'/'+p.replace(/^\/+/,'');
+  return cdn.replace(/\/+$/,'')+'/'+p.replace(/^\/+/,'' );
 }
 function weserv(u){try{const x=new URL(u);return 'https://images.weserv.nl/?url='+encodeURIComponent(x.host+x.pathname+(x.search||''))}catch{return''}}
 function ph(t){
@@ -439,9 +488,7 @@ function imgChain(raw,cdn){
   const a=absUrl(raw,cdn); if(!a) return [ph('Poster')];
   const httpsFix=(location.protocol==='https:'&&/^http:\/\//i.test(a))?a.replace(/^http:/,'https:'):'';
   const ws=weserv(a);
-  const list=[ws,httpsFix,a].filter(Boolean);
-  list.push(ph('Poster'));
-  return [...new Set(list)];
+  const list=[ws,httpsFix,a].filter(Boolean); list.push(ph('Poster')); return [...new Set(list)];
 }
 function onImgError(img){
   const l=(img.dataset.f||'').split('|').filter(Boolean);
@@ -451,7 +498,7 @@ function onImgError(img){
 }
 window.onImgError=onImgError;
 
-/* Fetch cache nhẹ */
+/* Fetch + cache nhẹ */
 const memCache=new Map();
 async function fetchJSON(u,t=12000){
   if(memCache.has(u)) return memCache.get(u);
@@ -482,8 +529,7 @@ function card(movie, cdn){
   const div=document.createElement('div');
   div.className='movie';
   div.dataset.slug=movie.slug||'';
-  div.setAttribute('tabindex','0');
-  div.setAttribute('role','button');
+  div.setAttribute('tabindex','0'); div.setAttribute('role','button');
   div.setAttribute('aria-label',`Xem chi tiết ${t}`);
   div.innerHTML=`<div class="poster shine">
       <img src="${srcs[0]}" alt="${t.replace(/"/g,'&quot;')}" loading="lazy" decoding="async" referrerpolicy="no-referrer"
@@ -498,23 +544,18 @@ function card(movie, cdn){
       </div>
     </div>`;
 
-  // Tilt throttle với rAF
-  const pEl=()=>div.querySelector('.poster');
-  let raf=0, lastX=0, lastY=0;
+  // Tilt (rAF throttle)
+  const pEl=()=>div.querySelector('.poster'); let raf=0, lastX=0, lastY=0;
   div.addEventListener('pointermove',e=>{
-    lastX=e.clientX; lastY=e.clientY;
-    if(raf) return;
+    lastX=e.clientX; lastY=e.clientY; if(raf) return;
     raf=requestAnimationFrame(()=>{
-      const r=pEl().getBoundingClientRect();
-      const x=(lastX-r.left)/r.width, y=(lastY-r.top)/r.height;
+      const r=pEl().getBoundingClientRect(), x=(lastX-r.left)/r.width, y=(lastY-r.top)/r.height;
       pEl().style.setProperty('--rx',((.5-y)*10)+'deg');
-      pEl().style.setProperty('--ry',((x-.5)*10)+'deg');
-      raf=0;
+      pEl().style.setProperty('--ry',((x-.5)*10)+'deg'); raf=0;
     });
   },{passive:true});
   div.addEventListener('pointerleave',()=>{const p=pEl();p.style.setProperty('--rx','0deg');p.style.setProperty('--ry','0deg')});
 
-  // Click: bỏ qua nếu vừa kéo
   const go=()=>{ if(div.closest('.movie-row')?.dataset.dragging==='1') return; openDetail(movie.slug); };
   div.addEventListener('click',go);
   div.addEventListener('keydown',(e)=>{if(e.key==='Enter' || e.key===' '){e.preventDefault();go()}});
@@ -548,51 +589,73 @@ function renderRank(listEl, items, cdn){
   });
 }
 
-/* =============== Genres render =============== */
-const GENRES=[
-  {name:'Hành Động',slug:'hanh-dong'},
-  {name:'Cổ Trang',slug:'co-trang'},
-  {name:'Chiến Tranh',slug:'chien-tranh'},
-  {name:'Viễn Tưởng',slug:'vien-tuong'},
-  {name:'Kinh Dị',slug:'kinh-di'},
-  {name:'Tài Liệu',slug:'tai-lieu'},
-  {name:'Bí Ẩn',slug:'bi-an'},
-  {name:'Phim 18+',slug:'18+'},
-  {name:'Tình Cảm',slug:'tinh-cam'},
-  {name:'Tâm Lý',slug:'tam-ly'},
-  {name:'Thể Thao',slug:'the-thao'},
-  {name:'Phiêu Lưu',slug:'phieu-luu'},
-  {name:'Âm Nhạc',slug:'am-nhac'},
-  {name:'Gia Đình',slug:'gia-dinh'},
-  {name:'Học Đường',slug:'hoc-duong'},
-  {name:'Hài Hước',slug:'hai-huoc'},
-  {name:'Hình Sự',slug:'hinh-su'},
-  {name:'Võ Thuật',slug:'vo-thuat'},
-  {name:'Khoa Học',slug:'khoa-hoc'},
-  {name:'Thần Thoại',slug:'than-thoai'},
-  {name:'Chính Kịch',slug:'chinh-kich'},
-  {name:'Kinh Điển',slug:'kinh-dien'},
-  {name:'Anime',slug:'anime'},
-  {name:'Hoạt hình',slug:'hoat-hinh'}
-];
-function renderGenres(){
-  const wrap=$('#genres'); wrap.innerHTML='';
-  GENRES.forEach(g=>{
-    const b=document.createElement('button');
-    b.className='genre';
-    b.textContent=g.name;
-    b.onclick=()=>startExplore('genre:'+g.slug,'Thể loại: '+g.name);
-    wrap.appendChild(b);
+/* =============== Anime Vault logic =============== */
+const animeState={list:[],cdn:'https://phimimg.com',current:null};
+async function loadAnimeVault(){
+  const urls=[
+    `${API_V1}/the-loai/anime?page=1&limit=36`,
+    `${API_V1}/the-loai/hoat-hinh?page=1&limit=36`,
+    `${API_V1}/danh-sach/hoat-hinh?page=1&limit=36`
+  ];
+  for(const u of urls){
+    try{
+      const d=normList(await fetchJSON(u));
+      if(d.items?.length){ animeState.list=d.items; animeState.cdn=d.cdn; break; }
+    }catch{}
+  }
+  renderAnimeVault(animeState.list[0]);
+}
+function badgeEl(t){const s=document.createElement('span');s.className='badge2';s.textContent=t;return s}
+function renderAnimeVault(movie){
+  const fallbackTxt='Đang tải…';
+  const m=movie||{};
+  animeState.current=m;
+  const poster=imgChain(m.poster_url||m.thumb_url||'',animeState.cdn)[0];
+  $('#avBg').style.backgroundImage=`url('${poster||''}')`;
+  $('#avTitle').textContent=m.name||m.origin_name||fallbackTxt;
+  $('#avSub').textContent=m.origin_name||'';
+  // badges
+  const bag=$('#avBadges'); bag.innerHTML='';
+  if(typeof m.imdb==='number') bag.appendChild(badgeEl('IMDb '+m.imdb.toFixed(1)));
+  bag.appendChild(badgeEl('T13'));
+  if(m.year) bag.appendChild(badgeEl(m.year));
+  if(m.episode_current){
+    const num=(m.episode_current.match(/\d+/)||[])[0];
+    if(num) bag.appendChild(badgeEl('Tập '+num));
+  }
+  if(m.quality) bag.appendChild(badgeEl(m.quality));
+  // tags
+  const tg=$('#avTags'); tg.innerHTML='';
+  (m.category||[]).slice(0,4).forEach(c=>{const t=document.createElement('span');t.className='tag';t.textContent=c.name; tg.appendChild(t);});
+  // desc
+  $('#avDesc').textContent=(m.content||'').trim()||'...';
+
+  // CTA
+  $('#avPlay').onclick=()=>openDetail(m.slug);
+  $('#avFav').onclick=()=>toggleFav({slug:m.slug,name:m.name||m.origin_name,poster_url:m.poster_url||m.thumb_url,year:m.year});
+  $('#avInfo').onclick=()=>openDetail(m.slug);
+
+  // strip
+  const strip=$('#avStrip'); strip.innerHTML='';
+  animeState.list.slice(0,20).forEach((it,idx)=>{
+    const im=imgChain(it.poster_url||it.thumb_url||'',animeState.cdn)[0];
+    const d=document.createElement('div'); d.className='av-thumb'+(it.slug===m.slug?' active':'');
+    d.innerHTML=`<div class="box"><img src="${im}" alt="${(it.name||'').replace(/"/g,'&quot;')}" loading="lazy" decoding="async" referrerpolicy="no-referrer" data-f="${im}" onerror="onImgError(this)"><span class="cap">${(it.year||'')}</span></div>`;
+    d.addEventListener('mouseenter',()=>{renderAnimeVault(it)});
+    d.addEventListener('focus',()=>{renderAnimeVault(it)});
+    d.addEventListener('click',()=>openDetail(it.slug));
+    strip.appendChild(d);
   });
 }
+$('#goMoreAnime').onclick=()=>startExplore('cat:anime','Thể loại: Anime');
 
 /* =============== Home data =============== */
 async function loadHome(){
   try{
     ['row-hot','row-hq','row-tq','row-usuk','row-bo','row-le','row-anime'].forEach(id=>skeletonRow(id));
-    renderGenres();
+    loadAnimeVault();
 
-    // Hot (fallback theo nhiều endpoint)
+    // Hot
     const urls=[`${API_BASE}/danh-sach/phim-moi-cap-nhat-v3?page=1`,`${API_BASE}/danh-sach/phim-moi-cap-nhat-v2?page=1`,`${API_BASE}/danh-sach/phim-moi-cap-nhat?page=1`];
     let hot=null; for(const u of urls){ try{ hot=normList(await fetchJSON(u)); break; }catch{} }
     if(hot){ fillRow('row-hot', hot.items.slice(0,12), hot.cdn); buildHero(hot.items[0],hot.cdn); }
@@ -602,11 +665,11 @@ async function loadHome(){
     loadBy(`${API_V1}/quoc-gia/trung-quoc?page=1&limit=36`,'row-tq');
     loadBy(`${API_V1}/quoc-gia/au-my?page=1&limit=36`,'row-usuk');
 
-    // Anime & hoạt hình (thử nhiều nguồn)
+    // Anime & hoạt hình (row)
     loadByTry([
       `${API_V1}/the-loai/anime?page=1&limit=36`,
-      `${API_V1}/danh-sach/hoat-hinh?page=1&limit=36`,
-      `${API_V1}/the-loai/hoat-hinh?page=1&limit=36`
+      `${API_V1}/the-loai/hoat-hinh?page=1&limit=36`,
+      `${API_V1}/danh-sach/hoat-hinh?page=1&limit=36`
     ],'row-anime');
 
     // Danh sách
@@ -654,7 +717,7 @@ function setView(id){
 }
 function setActiveTabByView(view){
   $$('#tabs .tab').forEach(x=>{
-    const is=(x.dataset.view===view)||(view==='explore' && x.dataset.view==='explore' && x.dataset.type===exploreType);
+    const is = (x.dataset.view===view) || (view==='explore' && x.dataset.view==='explore' && x.dataset.type===exploreType);
     x.classList.toggle('active',is);
   });
 }
@@ -677,7 +740,7 @@ document.querySelectorAll('.chip[data-go]').forEach(c=>{
     if(v==='quocgia-hq') startExplore('han-quoc','Khám phá: Hàn Quốc');
     else if(v==='quocgia-tq') startExplore('trung-quoc','Khám phá: Trung Quốc');
     else if(v==='quocgia-usuk') startExplore('au-my','Khám phá: US-UK');
-    else if(v==='hoat-hinh') startExplore('hoat-hinh','Khám phá: Hoạt hình');
+    else if(v==='cat-hoat-hinh') startExplore('cat:hoat-hinh','Thể loại: Hoạt hình');
   };
 });
 document.querySelectorAll('.chip[data-key]').forEach(c=>c.onclick=()=>{const k=c.dataset.key;startExplore(k,`Kết quả: “${k}”`);location.hash='#search='+encodeURIComponent(k)});
@@ -687,25 +750,22 @@ function exploreUrl(page){
     const p=new URLSearchParams({keyword:exploreKey,page,limit:36});
     return `${API_V1}/tim-kiem?${p}`;
   }
-  // Thể loại: "genre:<slug>"
-  if(String(exploreType).startsWith('genre:')){
-    const slug=String(exploreType).split(':')[1];
-    return `${API_V1}/the-loai/${encodeURIComponent(slug)}?page=${page}&limit=36`;
+  if(exploreType.startsWith('cat:')){
+    const slug=exploreType.split(':')[1];
+    return `${API_V1}/the-loai/${slug}?page=${page}&limit=36`;
   }
-  // Quốc gia
   if(['han-quoc','trung-quoc','au-my','nhat-ban','viet-nam'].includes(exploreType)){
     return `${API_V1}/quoc-gia/${exploreType}?page=${page}&limit=36`;
   }
-  // Danh sách mặc định
   return `${API_V1}/danh-sach/${exploreType}?page=${page}&limit=36`;
 }
 async function startExplore(typeOrKey, title){
   setView('explore'); $('#grid').innerHTML=''; $('#exploreTitle').textContent=title||'Khám phá';
   explorePage=1; exploreTotal=2; exploreCDN='https://phimimg.com'; exploreKey=''; exploreType='phim-le';
   if(typeof typeOrKey==='string'){
-    if(['phim-le','phim-bo','tv-shows','hoat-hinh'].includes(typeOrKey)) exploreType=typeOrKey;
+    if(typeOrKey.startsWith('cat:')) exploreType=typeOrKey;
+    else if(['phim-le','phim-bo','tv-shows','hoat-hinh'].includes(typeOrKey)) exploreType=typeOrKey;
     else if(['han-quoc','trung-quoc','au-my','nhat-ban','viet-nam'].includes(typeOrKey)) exploreType=typeOrKey;
-    else if(typeOrKey.startsWith('genre:')) exploreType=typeOrKey;
     else exploreKey=typeOrKey;
   }
   setActiveTabByView('explore');
@@ -732,7 +792,7 @@ $('#q').addEventListener('input',debounce(()=>{const v=$('#q').value.trim();if(v
 $('#q').addEventListener('keypress',e=>{if(e.key==='Enter') doSearch()});
 document.addEventListener('keydown',e=>{if(e.key==='/'&&document.activeElement!==$('#q')){e.preventDefault();$('#q').focus()}},{passive:true});
 
-/* =============== Detail & Player (HLS Pro) =============== */
+/* =============== Detail & Player (HLS) =============== */
 let hls=null, currentMovie=null, currentEp=null, currentEps=[];
 const LS={vol:'tp_vol',rate:'tp_rate',ql:'tp_ql_height',autonext:'tp_autonext'};
 
@@ -757,40 +817,33 @@ async function openDetail(slug){
     $('#dTitle').textContent=`${m.name||m.origin_name||''} ${m.year?`(${m.year})`:''}`;
     $('#dMeta').innerHTML=`⏳ ${m.time||'N/A'} • ${m.quality||'N/A'} • ${(m.country||[]).map(x=>x.name).join(', ')||'Không rõ'}`;
 
-    // desc
     const desc=m.content||'Không có mô tả'; const el=$('#pDesc'); el.textContent=desc; const tg=$('#pToggle');
     if(desc.length>220){tg.style.display='inline-block';tg.textContent='Xem thêm ▼';tg.onclick=()=>{const ex=el.classList.toggle('exp');tg.textContent=ex?'Thu gọn':'Xem thêm ▼'} } else tg.style.display='none';
 
-    // episodes
     currentEps=(d.episodes||[]).flatMap(sv=>(sv.server_data||[]).map((ep,i)=>({name:ep.name||`Tập ${i+1}`,embed:ep.link_embed,m3u8:ep.link_m3u8})));
     const wrap=$('#eps'); wrap.innerHTML=''; currentEp=null;
     currentEps.forEach((ep,idx)=>{const b=document.createElement('button');b.textContent=ep.name; b.onclick=()=>selectEp(ep,b); if(idx===0){b.classList.add('sel');currentEp=ep;} wrap.appendChild(b)});
 
-    // CTA & toolbar
     $('#btnPlayNow').textContent=currentEp?`Xem ngay (${currentEp.name})`:'Xem ngay';
-    $('#btnPlayNow').onclick=()=>{ if(currentEp) play(currentEp); else toast('Chưa có tập'); };
+    $('#btnPlayNow').onclick=()=>{ if(currentEp) play(currentEp); else toast('Chưa có tập') };
     $('#btnFav').onclick=()=>toggleFav(m);
     $('#btnShare').onclick=()=>{navigator.clipboard?.writeText(location.href); toast('Đã sao chép link')};
     $('#btnReport').onclick=()=>{prompt('Mô tả lỗi phát (copy link này gửi cho admin):', location.href)};
     $('#playerToolbar').style.display='flex';
 
-    // restore settings
     $('#autoNext').checked = JSON.parse(localStorage.getItem(LS.autonext) || 'true');
 
-    openPopup(); cleanup(); // chưa phát cho tới khi bấm
+    openPopup(); cleanup();
     addHistory(m);
   }catch{toast('Lỗi tải chi tiết')}
 }
 function selectEp(ep, btn){
-  currentEp=ep;
-  $$('#eps button').forEach(x=>x.classList.remove('sel'));
-  btn.classList.add('sel');
+  currentEp=ep; $$('#eps button').forEach(x=>x.classList.remove('sel')); btn.classList.add('sel');
   $('#btnPlayNow').textContent=`Xem ngay (${ep.name})`;
 }
 function openPopup(){ $('#popup').style.display='flex'; window.scrollTo({top:0,behavior:'smooth'}) }
 function closePopup(){
-  cleanup();
-  $('#popup').style.display='none';
+  cleanup(); $('#popup').style.display='none';
   if(location.hash.startsWith('#/p/')) history.pushState('',document.title,window.location.pathname+window.location.search);
 }
 $('#close').onclick=closePopup;
@@ -812,13 +865,13 @@ function createVideo(){
 }
 function buildQualityMenu(levels){
   const sel=$('#qualitySelect'); sel.innerHTML='<option value="auto">Auto</option>';
-  levels.forEach((lv,i)=>{ const opt=document.createElement('option'); opt.value=String(lv.height||i); opt.text=`${lv.height?lv.height+'p':''}${lv.name?(' '+lv.name):''}${lv.bitrate?(' • '+Math.round(lv.bitrate/1000)+'kbps'):''}`.trim()||`Level ${i}`; sel.appendChild(opt); });
+  (levels||[]).forEach((lv,i)=>{ const opt=document.createElement('option'); opt.value=String(lv.height||i); opt.text=`${lv.height?lv.height+'p':''}${lv.name?(' '+lv.name):''}${lv.bitrate?(' • '+Math.round(lv.bitrate/1000)+'kbps'):''}`.trim()||`Level ${i}`; sel.appendChild(opt); });
 }
 function applyQualityPreference(levels){
   const pref=localStorage.getItem(LS.ql);
   if(!hls) return;
   if(!pref || pref==='auto'){ hls.currentLevel=-1; $('#qualitySelect').value='auto'; return; }
-  const idx=levels.findIndex(l=>String(l.height)===pref);
+  const idx=(levels||[]).findIndex(l=>String(l.height)===pref);
   if(idx>=0){ hls.currentLevel=idx; $('#qualitySelect').value=String(levels[idx].height); }
   else { hls.currentLevel=-1; $('#qualitySelect').value='auto'; }
 }
@@ -865,9 +918,8 @@ function play(ep){
             if(idx>=0){ hls.currentLevel=idx; localStorage.setItem(LS.ql,v); }
           }
         };
-      } else if(video.canPlayType('application/vnd.apple.mpegurl')){ // Safari
-        video.src=ep.m3u8; $('#loading').style.display='none';
-      } else { if(ep.embed) playEmbed(ep.embed); else toast('Thiết bị không hỗ trợ HLS'); }
+      } else if(video.canPlayType('application/vnd.apple.mpegurl')){ video.src=ep.m3u8; $('#loading').style.display='none'; }
+      else { if(ep.embed) playEmbed(ep.embed); else toast('Thiết bị không hỗ trợ HLS'); }
     });
   }else if(ep.embed){ playEmbed(ep.embed) } else { toast('Không có nguồn phát') }
 
@@ -905,7 +957,7 @@ function renderHistory(){
   if(!hisList().length) grid.innerHTML='<p style="color:#9aa4b5">Chưa có lịch sử xem.</p>';
 }
 
-/* =============== Row Enhancer: drag + scrubber =============== */
+/* =============== Row Enhancer =============== */
 function setupRows(){
   $$('.row').forEach(w=>{
     const row=w.querySelector('.movie-row');
@@ -937,8 +989,8 @@ function setupRows(){
       const max=row.scrollWidth-row.clientWidth; if(max<=0){ sb.style.display='none'; return; } sb.style.display='';
       const trackW=track.clientWidth; const viewRatio=row.clientWidth/row.scrollWidth;
       const thumbW=Math.max(28, Math.round(trackW*viewRatio)); thumb.style.width=thumbW+'px';
-      const leftRatio=max>0?row.scrollLeft/max:0;
-      const left=Math.round((trackW-thumbW)*leftRatio);
+      const leftRatio = max>0 ? row.scrollLeft/max : 0;
+      const left = Math.round((trackW-thumbW)*leftRatio);
       thumb.style.left=left+'px';
       thumb.setAttribute('aria-valuenow', Math.round(leftRatio*100));
     };
@@ -971,6 +1023,7 @@ window.addEventListener('hashchange',()=>{
   const h=location.hash;
   if(h.startsWith('#/p/')) openDetail(h.split('/p/')[1]);
   else if(h.startsWith('#search=')){ const kw=decodeURIComponent(h.split('=')[1]||''); $('#q').value=kw; startExplore(kw,`Kết quả: “${kw}”`) }
+  else if(h.startsWith('#cat=')){ const slug=decodeURIComponent(h.split('=')[1]||''); startExplore('cat:'+slug,'Thể loại: '+slug.replace(/-/g,' ')); }
 });
 
 /* Kickoff */
