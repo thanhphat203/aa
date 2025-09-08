@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>PFLIX • Phim hay mượt cập nhật nhanh mỗi ngày !!</title>
+<title>PFLIX • XEM PHIM MỚI MỖI NGÀY</title>
 <meta name="description" content="Duyệt & xem thông tin phim mượt. Dữ liệu từ phimapi.com." />
 <meta name="theme-color" content="#0b1020" />
 
@@ -385,6 +385,52 @@ footer a{color:#93c5fd}
 .movie:hover{transform:scale(1.02)}
 
 /* Nâng cấp: Player progress bar custom nếu cần, nhưng giữ native controls */
+
+/* Nâng cấp mới: Thêm animation fade-in cho cards */
+.movie {opacity: 0; animation: fadeInCard 0.5s ease forwards;}
+@keyframes fadeInCard {from {opacity: 0; transform: translateY(20px);} to {opacity: 1; transform: translateY(0);}}
+.movie:nth-child(1) {animation-delay: 0.1s;}
+.movie:nth-child(2) {animation-delay: 0.2s;}
+.movie:nth-child(3) {animation-delay: 0.3s;}
+.movie:nth-child(4) {animation-delay: 0.4s;}
+.movie:nth-child(5) {animation-delay: 0.5s;}
+.movie:nth-child(6) {animation-delay: 0.6s;}
+.movie:nth-child(7) {animation-delay: 0.7s;}
+.movie:nth-child(8) {animation-delay: 0.8s;}
+.movie:nth-child(9) {animation-delay: 0.9s;}
+.movie:nth-child(10) {animation-delay: 1s;}
+
+/* Nâng cấp mới: Thêm rating stars vào card */
+.pills .rating {display: inline-flex; align-items: center; gap: 2px; color: #facc15;}
+.pills .rating svg {width: 10px; height: 10px; fill: currentColor;}
+
+/* Nâng cấp mới: Cải thiện toast với icon */
+.toast.success {background: #22c55e; border-color: #16a34a;}
+.toast.error {background: #ef4444; border-color: #dc2626;}
+
+/* Nâng cấp mới: Thêm button toggle subtitles trong toolbar (nếu hỗ trợ) */
+.toolbar .sub-btn {background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.08); color: #fff; padding: 6px 10px; border-radius: 8px; cursor: pointer;}
+.toolbar .sub-btn:hover {background: linear-gradient(135deg,#2563eb,#7c3aed);}
+.toolbar .sub-btn.active {background: linear-gradient(135deg,#22c55e,#16a34a);}
+
+/* Nâng cấp mới: Responsive cải thiện cho mobile - lớn hơn poster */
+@media(max-width:740px){
+  .hero__body {flex-direction: column; text-align: center;}
+  .hero-actions {justify-content: center;}
+  .hero__poster {width: 100%; height: auto; max-width: 200px; margin: 0 auto;}
+  .hero__poster img {height: auto;}
+  .grid {grid-template-columns: repeat(auto-fill, minmax(120px,1fr)); gap: 10px;}
+  .movie {width: 120px;}
+  .poster {padding-top: 150%;}
+}
+
+/* Nâng cấp mới: Thêm shadow cho tabs khi active */
+.tab.active {box-shadow: 0 4px 12px rgba(124,58,237,.3);}
+
+/* Nâng cấp mới: Cải thiện footer với social icons */
+.footer-content .social {display: flex; justify-content: center; gap: 16px; margin-top: 12px;}
+.footer-content .social a {font-size: 20px; color: #93c5fd; transition: color 0.2s;}
+.footer-content .social a:hover {color: #7c3aed;}
 </style>
 </head>
 <body>
@@ -473,28 +519,28 @@ footer a{color:#93c5fd}
     </div>
   </section>
 
-  <div class="sec"><h2>Phim Hàn Quốc mới</h2><a class="chip" data-go="quocgia-hq">Xem thêm ›</a></div>
+  <div class="sec"><h2>| Phim Hàn Quốc Mới</h2><a class="chip" data-go="quocgia-hq">Xem thêm ›</a></div>
   <div class="row"><div id="row-hq" class="movie-row"></div></div>
 
-  <div class="sec"><h2>Phim Trung Quốc mới</h2><a class="chip" data-go="quocgia-tq">Xem thêm ›</a></div>
+  <div class="sec"><h2>| Phim Trung Quốc Mới</h2><a class="chip" data-go="quocgia-tq">Xem thêm ›</a></div>
   <div class="row"><div id="row-tq" class="movie-row"></div></div>
 
-  <div class="sec"><h2>Phim US–UK mới</h2><a class="chip" data-go="quocgia-usuk">Xem thêm ›</a></div>
+  <div class="sec"><h2>| Phim US–UK Mới</h2><a class="chip" data-go="quocgia-usuk">Xem thêm ›</a></div>
   <div class="row"><div id="row-usuk" class="movie-row"></div></div>
 
-  <div class="sec"><h2>Anime & Hoạt hình mới</h2><a class="chip" data-go="cat-hoat-hinh">Xem thêm ›</a></div>
+  <div class="sec"><h2>| Anime & Hoạt Hình Mới</h2><a class="chip" data-go="cat-hoat-hinh">Xem thêm ›</a></div>
   <div class="row"><div id="row-anime" class="movie-row"></div></div>
 
-  <div class="sec"><h2>🔥 Phim Hot</h2></div>
+  <div class="sec"><h2>| Phim Hot</h2></div>
   <div class="row"><div id="row-hot" class="movie-row"></div></div>
 
-  <div class="sec"><h2>✨ Đề xuất cho bạn</h2></div>
+  <div class="sec"><h2>| Phim Đề Xuất Cho Bạn</h2></div>
   <div class="row"><div id="row-foru" class="movie-row"></div></div>
 
-  <div class="sec"><h2>⏳ Sắp chiếu</h2></div>
+  <div class="sec"><h2>| Phim Top IMDB</h2></div>
   <div class="row"><div id="row-upcoming" class="movie-row"></div></div>
 
-  <div class="sec"><h2>🎯 Top Lượt Xem Cao Nhất</h2></div>
+  <div class="sec"><h2>| Phim Sôi Nổi Trong Tuần</h2></div>
   <div class="row"><div id="row-imdb" class="movie-row"></div></div>
 
   <div class="sec"><h2>Bảng xếp hạng hôm nay</h2></div>
@@ -608,6 +654,7 @@ footer a{color:#93c5fd}
           <span class="slider"></span>
         </label>
       </label>
+      <button class="sub-btn" id="subToggle">Phụ đề</button>
       <div style="flex:1"></div>
       <button id="btnReload" class="btn btn-ghost" title="Tải lại nguồn">↻</button>
       <button id="btnPiP" class="btn btn-ghost" title="Picture-in-Picture">PiP</button>
@@ -646,6 +693,11 @@ footer a{color:#93c5fd}
       <span class="star" aria-hidden="true">★</span>
       <span>Hoàng Sa &amp; Trường Sa là của Việt Nam!</span>
     </div>
+    <div class="social">
+      <a href="https://facebook.com" aria-label="Facebook">FB</a>
+      <a href="https://twitter.com" aria-label="Twitter">TW</a>
+      <a href="https://instagram.com" aria-label="Instagram">IG</a>
+    </div>
   </div>
 </footer>
 
@@ -666,7 +718,7 @@ new ResizeObserver(syncHeaderPadding).observe(document.querySelector('.hdr'));
 const API_BASE='https://phimapi.com';
 const API_V1=API_BASE+'/v1/api';
 const $=s=>document.querySelector(s);const $$=s=>document.querySelectorAll(s);
-const toast=(m,t=1800)=>{const d=document.createElement('div');d.className='toast';d.textContent=m;document.body.appendChild(d);setTimeout(()=>d.remove(),t)};
+const toast=(m,t=1800,cls='')=>{const d=document.createElement('div');d.className=`toast ${cls}`;d.textContent=m;document.body.appendChild(d);setTimeout(()=>d.remove(),t)};
 
 /* Ảnh + fallback chuỗi */
 function absUrl(p,cdn='https://phimimg.com'){
@@ -834,6 +886,8 @@ function card(movie, cdn){
   div.setAttribute('tabindex','0'); div.setAttribute('role','button');
   div.setAttribute('aria-label',`Xem chi tiết ${t}`);
 
+  const ratingStars = movie.imdb ? '<span class="rating">' + '★'.repeat(Math.floor(movie.imdb / 2)) + '</span>' : '';
+
   div.innerHTML=`<div class="poster shine">
       ${epTag}${viewsTag}${langTag}
       <img src="${srcs[0]}" alt="${t.replace(/"/g,'&quot;')}" loading="lazy" decoding="async" referrerpolicy="no-referrer"
@@ -842,6 +896,7 @@ function card(movie, cdn){
         <div class="tl">${t}</div>
         <div class="pills">
           ${movie.year?`<span class="pill">${movie.year}</span>`:''}
+          ${ratingStars}
         </div>
       </div>
     </div>`;
@@ -1020,7 +1075,7 @@ async function loadHome(){
     })();
 
     setupRows();
-  }catch(e){ toast('Lỗi tải trang chủ'); }
+  }catch(e){ toast('Lỗi tải trang chủ', 3000, 'error'); }
 }
 async function loadBy(url, cid){ try{const d=normList(await fetchJSON(url)); fillRow(cid,d.items,d.cdn);}catch{} }
 async function loadByTry(urls,cid){
@@ -1269,7 +1324,7 @@ const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting) loadM
 
 /* Search */
 const debounce=(fn,ms=350)=>{let t;return(...a)=>{clearTimeout(t);t=setTimeout(()=>fn(...a),ms)}}
-const doSearch=()=>{const k=$('#q').value.trim();if(!k)return toast('Nhập từ khoá');startExplore(k,`Kết quả: “${k}”`);location.hash='#search='+encodeURIComponent(k)}
+const doSearch=()=>{const k=$('#q').value.trim();if(!k)return toast('Nhập từ khoá', 2000, 'error');startExplore(k,`Kết quả: “${k}”`);location.hash='#search='+encodeURIComponent(k)}
 $('#btnSearch').addEventListener('click',doSearch);
 $('#q').addEventListener('input',debounce(()=>{const v=$('#q').value.trim();if(v.length>2) startExplore(v,`Kết quả: “${v}”`)},600));
 $('#q').addEventListener('keypress',e=>{if(e.key==='Enter') doSearch()});
@@ -1290,7 +1345,7 @@ async function openDetail(slug){
   if(!slug) return;
   try{
     const d=await fetchJSON(`${API_BASE}/phim/${slug}`);
-    if(!d?.status) return toast('Không tìm thấy dữ liệu');
+    if(!d?.status) return toast('Không tìm thấy dữ liệu', 3000, 'error');
     const m=d.movie||{}; currentMovie=m; location.hash='#/p/'+slug;
     const cdn=d.APP_DOMAIN_CDN_IMAGE||'https://phimimg.com';
     const poster=imgChain(m.poster_url||m.thumb_url||'',cdn)[0];
@@ -1312,9 +1367,9 @@ async function openDetail(slug){
     loadSimilar(m);
 
     $('#btnPlayNow').textContent=currentEp?`Xem ngay (${currentEp.name})`:'Xem ngay';
-    $('#btnPlayNow').onclick=()=>{ if(currentEp) play(currentEp); else toast('Chưa có tập'); };
+    $('#btnPlayNow').onclick=()=>{ if(currentEp) play(currentEp); else toast('Chưa có tập', 2000, 'error'); };
     $('#btnFav').onclick=()=>toggleFav(m);
-    $('#btnShare').onclick=()=>{navigator.clipboard?.writeText(location.href); toast('Đã sao chép link')};
+    $('#btnShare').onclick=()=>{navigator.clipboard?.writeText(location.href); toast('Đã sao chép link', 2000, 'success')};
     $('#btnReport').onclick=()=>{prompt('Mô tả lỗi phát (copy link này gửi cho admin):', location.href)};
     $('#playerToolbar').style.display='flex';
 
@@ -1327,7 +1382,7 @@ async function openDetail(slug){
 
     openPopup(); cleanup();
     addHistory(m);
-  }catch{toast('Lỗi tải chi tiết')}
+  }catch{toast('Lỗi tải chi tiết', 3000, 'error')}
 }
 function updateVotesUI(slug){
   const v=getVotes(slug);
@@ -1378,7 +1433,7 @@ function createVideo(){
     const saved = localStorage.getItem(progressKey);
     if (saved && parseFloat(saved) < v.duration - 5) { // Không resume nếu gần kết thúc
       v.currentTime = parseFloat(saved);
-      toast('Tiếp tục từ vị trí đã lưu');
+      toast('Tiếp tục từ vị trí đã lưu', 2000, 'success');
     }
   });
   // Nâng cấp: Xóa tiến độ khi xem hết
@@ -1413,6 +1468,8 @@ function attachToolbar(videoEl){
   $('#btnReload').onclick=()=>{ if(currentEp) play(currentEp) };
   $('#speedSelect').onchange=()=>{ videoEl.playbackRate=parseFloat($('#speedSelect').value) };
   $('#autoNext').onchange=()=>localStorage.setItem(LS_PLAYER.autonext, JSON.stringify($('#autoNext').checked));
+  // Nâng cấp mới: Toggle subtitles (giả định có track, cần cấu hình thêm nếu có sub)
+  $('#subToggle').onclick=()=>{ $('#subToggle').classList.toggle('active'); /* Logic toggle sub ở đây nếu có */ toast('Phụ đề đã toggle', 2000, 'success'); };
 }
 function play(ep){
   cleanup();
@@ -1454,9 +1511,9 @@ function play(ep){
           console.warn('HLS Error:', data); // Log để debug
           if(data.fatal){
             try{ hls.recoverMediaError(); }catch(e){
-              toast('Nguồn HLS lỗi, thử embed...');
+              toast('Nguồn HLS lỗi, thử embed...', 3000, 'error');
               if(ep.embed) playEmbed(ep.embed);
-              else toast('Không có nguồn thay thế');
+              else toast('Không có nguồn thay thế', 3000, 'error');
             }
           }
         });
@@ -1476,10 +1533,10 @@ function play(ep){
       }
       else { 
         if(ep.embed) playEmbed(ep.embed); 
-        else toast('Thiết bị không hỗ trợ HLS'); 
+        else toast('Thiết bị không hỗ trợ HLS', 3000, 'error'); 
       }
     });
-  }else if(ep.embed){ playEmbed(ep.embed) } else { toast('Không có nguồn phát') }
+  }else if(ep.embed){ playEmbed(ep.embed) } else { toast('Không có nguồn phát', 3000, 'error') }
 
   setTimeout(()=>container.scrollIntoView({behavior:'smooth',block:'center'}),80);
 }
@@ -1487,7 +1544,7 @@ function playEmbed(u){
   try {
     $('#player').innerHTML=`<iframe src="${u}" allow="autoplay; encrypted-media; picture-in-picture" referrerpolicy="no-referrer" allowfullscreen></iframe>`;
   } catch (e) {
-    toast('Lỗi tải embed: ' + e.message);
+    toast('Lỗi tải embed: ' + e.message, 3000, 'error');
   }
 }
 
@@ -1531,10 +1588,10 @@ function favList(){return lsGet('fav','[]')}
 function isFav(slug){return favList().some(x=>x.slug===slug)}
 function toggleFav(m){
   let f=favList();
-  if(isFav(m.slug)){ f=f.filter(x=>x.slug!==m.slug); toast('Đã xoá khỏi Yêu thích'); }
+  if(isFav(m.slug)){ f=f.filter(x=>x.slug!==m.slug); toast('Đã xoá khỏi Yêu thích', 2000, 'success'); }
   else { 
     f.unshift({slug:m.slug,name:m.name||m.origin_name,poster:m.poster_url||m.thumb_url,year:m.year}); 
-    toast('Đã lưu Yêu thích'); 
+    toast('Đã lưu Yêu thích', 2000, 'success'); 
   }
   lsSet('fav',f); renderFav();
 }
