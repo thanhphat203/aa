@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>THANHPHAT • Phim hay mượt như app</title>
+<title>PFLIX • Phim hay mượt cập nhật nhanh mỗi ngày !!</title>
 <meta name="description" content="Duyệt & xem thông tin phim mượt. Dữ liệu từ phimapi.com." />
 <meta name="theme-color" content="#0b1020" />
 
@@ -190,11 +190,13 @@ input,button,select,textarea{font:inherit;-webkit-appearance:none}
 .poster .tag{position:absolute;display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:900;line-height:1;padding:5px 8px;border-radius:10px;border:1px solid rgba(255,255,255,.14);box-shadow:0 6px 18px rgba(0,0,0,.35);z-index:2;pointer-events:none}
 .tag-ep{top:8px;left:8px;background:linear-gradient(135deg,#22c55e,#16a34a);color:#f0fdf4}
 .tag-ep .ic{width:14px;height:14px;display:block;fill:currentColor;opacity:.95}
+/* chất lượng (giữ để hiển thị 720p/1080p… nhưng sẽ ẨN 4K ở JS) */
 .tag-q{top:8px;right:8px;background:linear-gradient(135deg,#f59e0b,#fbbf24);color:#111827}
+/* ==== MÀU NGÔN NGỮ THEO YÊU CẦU ==== */
 .tag-lang{left:8px;bottom:8px}
-.tag-lang.pd{background:rgba(0,0,0,.75);color:#fff;border-color:rgba(255,255,255,.2)}
-.tag-lang.lt{background:linear-gradient(135deg,#60a5fa,#3b82f6);color:#fff}
-.tag-lang.tm{background:linear-gradient(135deg,#f43f5e,#ef4444);color:#fff}
+.tag-lang.pd{background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff}     /* Phụ đề = ĐỎ */
+.tag-lang.lt{background:linear-gradient(135deg,#22c55e,#16a34a);color:#f0fdf4}   /* Lồng tiếng = XANH LÁ */
+.tag-lang.tm{background:linear-gradient(135deg,#60a5fa,#3b82f6);color:#fff}     /* Thuyết minh = XANH DƯƠNG */
 
 .movie:hover .shine::after{transform:translateX(-40%) rotate(25deg);opacity:.9}
 .movie:hover .poster{transform:perspective(700px) rotateX(calc(var(--rx,0)*1.15)) rotateY(calc(var(--ry,0)*1.15)) translateZ(6px)}
@@ -300,7 +302,7 @@ input,button,select,textarea{font:inherit;-webkit-appearance:none}
 .toggle{margin-top:10px;padding:8px 12px;background:#1d2542;border-radius:8px;border:1px solid rgba(255,255,255,.08);cursor:pointer}
 .eps{margin-top:12px;display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
 .eps button{padding:8px;background:#151c36;border:1px solid rgba(255,255,255,.08);color:white;border-radius:8px;cursor:pointer;font-weight:800}
-.eps button.sel{outline:2px solid #60a5fa;background:#0b1430}
+.eps button.sel{outline:2px solid #22c55e;background:#0b1430} /* chọn tập = xanh lá */
 
 /* Cast */
 .cast{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
@@ -349,7 +351,7 @@ footer a{color:#93c5fd}
   <div class="hdr__row container">
     <div class="brand" id="homeBtn" title="Về Trang chủ" aria-label="Về Trang chủ">
       <div class="brand__logo">★</div>
-      <div class="brand__t">TPFLIX</div>
+      <div class="brand__t">PFLIX</div>
     </div>
     <nav class="tabs" id="tabs" aria-label="Điều hướng">
       <button class="tab active" data-view="home">Trang chủ</button>
@@ -361,7 +363,7 @@ footer a{color:#93c5fd}
       <button class="tab" data-view="his">Lịch sử</button>
     </nav>
     <div class="search" role="search">
-      <input id="q" placeholder="Tìm phim... (ấn / để focus)" aria-label="Tìm phim">
+      <input id="q" placeholder="Tìm phim..." aria-label="Tìm phim">
       <button id="btnSearch" class="btn btn-pill">Tìm</button>
     </div>
   </div>
@@ -697,10 +699,11 @@ function langInfo(raw){
   if(/(viet|sub|phụ|phu)/.test(s)) return {text:'Phụ đề', cls:'pd'};
   return null;
 }
+/* ẨN TAG CHẤT LƯỢNG 4K */
 function qShort(q){
   const s=(q||'').toUpperCase();
   if(!s) return '';
-  if(s.includes('4K')) return '4K';
+  if(s.includes('4K')) return ''; /* không hiện nhãn 4K */
   if(s.includes('1080')) return '1080p';
   if(s.includes('720')) return '720p';
   if(/CAM|HDCAM/.test(s)) return 'CAM';
@@ -735,7 +738,7 @@ function card(movie, cdn){
         <div class="pills">
           ${movie.year?`<span class="pill">${movie.year}</span>`:''}
           ${movie.lang?`<span class="pill">${movie.lang}</span>`:''}
-          ${movie.quality?`<span class="pill">${movie.quality}</span>`:''}
+          ${(movie.quality && !/4k/i.test(movie.quality))?`<span class="pill">${movie.quality}</span>`:''}
         </div>
       </div>
     </div>`;
@@ -793,7 +796,10 @@ function buildHero(m,cdn){
   const poster=imgChain(m.poster_url||m.thumb_url||'',cdn)[0];
   $('#heroPoster').src=poster; $('#heroBg').style.backgroundImage=`url('${poster}')`;
   $('#heroTitle').textContent=m.name||m.origin_name||'';
-  const b=[]; if(m.year)b.push(`<span class="badge">${m.year}</span>`); if(m.lang)b.push(`<span class="badge">${m.lang}</span>`); if(m.quality)b.push(`<span class="badge">${m.quality}</span>`);
+  const b=[];
+  if(m.year)b.push(`<span class="badge">${m.year}</span>`);
+  if(m.lang)b.push(`<span class="badge">${m.lang}</span>`);
+  if(m.quality && !/4k/i.test(m.quality)) b.push(`<span class="badge">${m.quality}</span>`); /* ẩn 4K */
   $('#heroBadges').innerHTML=b.join('');
   $('#heroDesc').textContent=m.content || m.description || '...';
   $('#heroPlay').onclick=()=>openDetail(m.slug);
