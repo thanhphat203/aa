@@ -209,7 +209,7 @@ input,button,select,textarea{font:inherit;-webkit-appearance:none}
 .shine::after{content:"";position:absolute;inset:-130% -50% auto auto;width:60%;height:220%;transform:rotate(25deg);opacity:0;
   background:linear-gradient(90deg,transparent,rgba(255,255,255,.18),transparent);transition:transform .4s ease,opacity .4s ease}
 .poster .meta{z-index:1}
-.poster .tag{position:absolute;display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:900;line-height:1;padding:5px 8px;border-radius:10px;border:1px solid rgba(255,255,255,.14);box-shadow:0 6px 18px rgba(0,0,0,.35);z-index:2;pointer-events:none}
+.poster .tag{position:absolute;display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:900;line-height:1;padding:5px 8px;border-radius:10px;border:1px solid rgba(255,255,255,.14);box-shadow:0 6px 18px rgba(0,0,0,.35);z-index:2;pointer-events:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:calc(100% - 16px)}
 .tag-ep{top:8px;left:8px;background:linear-gradient(135deg,#22c55e,#16a34a);color:#f0fdf4}
 .tag-ep .ic{width:14px;height:14px;display:block;fill:currentColor;opacity:.95}
 /* ẨN CHẤT LƯỢNG */
@@ -384,8 +384,6 @@ footer a{color:#93c5fd}
 /* Nâng cấp: Cải thiện hover cho movie */
 .movie:hover{transform:scale(1.02)}
 
-/* Nâng cấp: Player progress bar custom nếu cần, nhưng giữ native controls */
-
 /* Nâng cấp mới: Thêm animation fade-in cho cards */
 .movie {opacity: 0; animation: fadeInCard 0.5s ease forwards;}
 @keyframes fadeInCard {from {opacity: 0; transform: translateY(20px);} to {opacity: 1; transform: translateY(0);}}
@@ -422,6 +420,22 @@ footer a{color:#93c5fd}
   .grid {grid-template-columns: repeat(auto-fill, minmax(120px,1fr)); gap: 10px;}
   .movie {width: 120px;}
   .poster {padding-top: 150%;}
+  /* FIX: Giảm kích thước tag để tránh overlap Tập và Người xem trên mobile */
+  .poster .tag {
+    font-size: 9px;
+    padding: 3px 5px;
+    gap: 3px;
+    max-width: calc(100% - 12px);
+  }
+  .tag-ep .ic,
+  .tag-views .ic {
+    width: 10px;
+    height: 10px;
+  }
+  .tag-lang {
+    font-size: 9px;
+    padding: 3px 5px;
+  }
 }
 
 /* Nâng cấp mới: Thêm shadow cho tabs khi active */
@@ -1652,5 +1666,3 @@ loadHome();
 </script>
 </body>
 </html>
-
-
