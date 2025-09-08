@@ -28,7 +28,7 @@
 @media(min-width:640px){:root{--hdr-h:68px}}
 * {box-sizing:border-box}
 html,body{height:100%}
-html{-webkit-text-size-adjust:100%;scroll-padding-top:calc(var(--hdr-h) + env(safe-area-inset-top,0px))}
+html{-webkit-text-size-adjust:100%;scroll-padding-top:calc(var(--hdr-h) + env(safe-area-inset-top,0px)); scroll-behavior: smooth;} /* Nâng cấp: Smooth scrolling toàn trang */
 body{
   margin:0;color:var(--text);
   -webkit-tap-highlight-color: transparent;
@@ -38,7 +38,43 @@ body{
     linear-gradient(180deg, rgba(2,6,23,.85), rgba(2,6,23,0)),
     var(--bg);
   padding-bottom:env(safe-area-inset-bottom,0px);
+  overflow-x: hidden; /* Nâng cấp: Tránh scroll ngang không mong muốn */
 }
+
+/* Nâng cấp: Particles - Các chấm trắng bay lượn */
+#particles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+}
+.particle {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.6); /* Chấm trắng trong suốt */
+  border-radius: 50%;
+  will-change: transform; /* Tối ưu animation mượt hơn */
+  animation: float linear infinite;
+}
+@keyframes float {
+  0% {
+    transform: translateY(100vh) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.8;
+  }
+  90% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-100px) translateX(100px) rotate(360deg); /* Thêm chuyển động ngang nhẹ */
+    opacity: 0;
+  }
+}
+
 a{color:inherit;text-decoration:none}
 input,button,select,textarea{font:inherit;-webkit-appearance:none}
 .container{max-width:var(--container);margin:0 auto;padding:0 14px}
@@ -191,7 +227,7 @@ input,button,select,textarea{font:inherit;-webkit-appearance:none}
 .row .arrow.right{right:8px}
 
 /* ===== Card ===== */
-.movie{width:176px;flex:0 0 auto;cursor:pointer;perspective:700px;outline:none;transition:transform .2s ease}
+.movie{width:176px;flex:0 0 auto;cursor:pointer;perspective:700px;outline:none;transition:transform .2s ease; will-change: transform;} /* Nâng cấp: will-change cho mượt hơn */
 .movie:focus-visible{box-shadow:0 0 0 3px rgba(96,165,250,.55);border-radius:16px}
 .poster{
   position:relative;height:0;padding-top:150%;border-radius:16px;overflow:hidden;background:#0e1426;border:1px solid rgba(255,255,255,.03); /* Giảm viền trắng */
@@ -373,6 +409,7 @@ footer a{color:#93c5fd}
 @media (prefers-reduced-motion: reduce){
   .movie:hover .poster{transform:none}
   .shine::after{display:none}
+  .particle {animation: none !important;} /* Tắt particles nếu giảm motion */
 }
 
 /* Nâng cấp: Fade in animation cho toast */
@@ -445,9 +482,17 @@ footer a{color:#93c5fd}
 .footer-content .social {display: flex; justify-content: center; gap: 16px; margin-top: 12px;}
 .footer-content .social a {font-size: 20px; color: #93c5fd; transition: color 0.2s;}
 .footer-content .social a:hover {color: #7c3aed;}
+
+/* Nâng cấp: Tối ưu performance - Giảm animation nếu cần */
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}
 </style>
 </head>
 <body>
+
+<!-- Nâng cấp: Thêm layer particles -->
+<div id="particles"></div>
 
 <header class="hdr">
   <div class="hdr__row container">
@@ -471,7 +516,7 @@ footer a{color:#93c5fd}
   </div>
 </header>
 
-<!-- HOME -->
+<!-- Nội dung trang giữ nguyên như cũ -->
 <section id="home" class="container">
   <div class="hero">
     <div class="hero__card">
@@ -718,10 +763,45 @@ function syncHeaderPadding(){
   const h=hdr.offsetHeight||72;
   document.body.style.paddingTop = h+'px';
 }
-window.addEventListener('load',()=>{ syncHeaderPadding(); setTimeout(syncHeaderPadding, 200); }, {once:true});
-window.addEventListener('resize', ()=>{ requestAnimationFrame(syncHeaderPadding); }, {passive:true});
+window.addEventListener('load',()=>{ syncHeaderPadding(); setTimeout(syncHeaderPadding, 200); createParticles(); }, {once:true}); /* Nâng cấp: Tạo particles khi load */
+window.addEventListener('resize', ()=>{ requestAnimationFrame(syncHeaderPadding); },{passive:true});
 window.addEventListener('orientationchange', ()=>{ setTimeout(syncHeaderPadding, 100); });
 new ResizeObserver(syncHeaderPadding).observe(document.querySelector('.hdr'));
+
+/* =============== Nâng cấp: Tạo particles chấm trắng bay =============== */
+function createParticles() {
+  const particlesContainer = document.getElementById('particles');
+  if (!particlesContainer) return;
+  
+  // Số lượng particles (tăng/giảm để điều chỉnh mật độ)
+  const numParticles = 200; // Có thể tăng lên 100 cho nhiều hơn, nhưng giữ mượt
+  
+  for (let i = 0; i < numParticles; i++) {
+    const particle = document.createElement('div');
+    particle.className = 'particle';
+    
+    // Vị trí ngẫu nhiên từ dưới lên
+    particle.style.left = Math.random() * 100 + '%';
+    particle.style.top = '100%'; // Bắt đầu từ dưới màn hình
+    
+    // Kích thước ngẫu nhiên nhỏ
+    const size = Math.random() * 3 + 1;
+    particle.style.width = size + 'px';
+    particle.style.height = size + 'px';
+    
+    // Delay và duration ngẫu nhiên để tạo hiệu ứng bay liên tục
+    particle.style.animationDelay = Math.random() * 30 + 's';
+    particle.style.animationDuration = (Math.random() * 10 + 15) + 's'; // 15-25s để chậm và mượt
+    
+    // Chuyển động ngang nhẹ ngẫu nhiên
+    const translateXEnd = (Math.random() - 0.5) * 200; // -100px đến +100px
+    particle.style.setProperty('--translateX-end', translateXEnd + 'px');
+    
+    particlesContainer.appendChild(particle);
+  }
+}
+
+// Cập nhật keyframes trong CSS để sử dụng biến (nếu cần, nhưng ở đây dùng inline style cho đơn giản)
 
 /* =============== Helpers & API =============== */
 const API_BASE='https://phimapi.com';
@@ -1442,7 +1522,7 @@ function createVideo(){
     const saved = localStorage.getItem(progressKey);
     if (saved && parseFloat(saved) < v.duration - 5) { // Không resume nếu gần kết thúc
       v.currentTime = parseFloat(saved);
-      toast('Tiếp tục từ vị trí đã lưu', 2000, 'success');
+      toast('Tiếp tục từ v��� trí đã lưu', 2000, 'success');
     }
   });
   // Nâng cấp: Xóa tiến độ khi xem hết
