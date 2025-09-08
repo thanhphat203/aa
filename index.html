@@ -6,10 +6,7 @@
 <title>ONFLIX • XEM PHIM MỚI MỖI NGÀY</title>
 <meta name="description" content="Duyệt & xem thông tin phim mượt. Dữ liệu từ phimapi.com." />
 <meta name="theme-color" content="#0b1020" />
-
-<!-- AdSense Script -->
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8741561216289"
-     crossorigin="anonymous"></script>
+<meta name="google-adsense-account" content="ca-pub-8744156112162890">
 
 <!-- Prefetch/Preconnect -->
 <link rel="dns-prefetch" href="https://phimapi.com">
@@ -504,7 +501,7 @@ footer a{color:#93c5fd}
       <div class="brand__logo">★</div>
       <div class="brand__t">ONFLIX</div>
     </div>
-    <nav class="tabs" id="tabs" aria-label="Điều hướng">
+    <nav class="tabs" id="tabs" aria-label="Điều h��ớng">
       <button class="tab active" data-view="home">Trang chủ</button>
       <button class="tab" data-type="phim-le" data-view="explore">Phim lẻ</button>
       <button class="tab" data-type="phim-bo" data-view="explore">Phim bộ</button>
@@ -778,7 +775,7 @@ function createParticles() {
   if (!particlesContainer) return;
   
   // Số lượng particles (tăng/giảm để điều chỉnh mật độ)
-  const numParticles = 50; // Có thể tăng lên 100 cho nhiều hơn, nhưng giữ mượt
+  const numParticles = 200; // Có thể tăng lên 100 cho nhiều hơn, nhưng giữ mượt
   
   for (let i = 0; i < numParticles; i++) {
     const particle = document.createElement('div');
@@ -794,7 +791,7 @@ function createParticles() {
     particle.style.height = size + 'px';
     
     // Delay và duration ngẫu nhiên để tạo hiệu ứng bay liên tục
-    particle.style.animationDelay = Math.random() * 20 + 's';
+    particle.style.animationDelay = Math.random() * 30 + 's';
     particle.style.animationDuration = (Math.random() * 10 + 15) + 's'; // 15-25s để chậm và mượt
     
     // Chuyển động ngang nhẹ ngẫu nhiên
@@ -1526,7 +1523,7 @@ function createVideo(){
     const saved = localStorage.getItem(progressKey);
     if (saved && parseFloat(saved) < v.duration - 5) { // Không resume nếu gần kết thúc
       v.currentTime = parseFloat(saved);
-      toast('Tiếp tục từ v��� trí đã lưu', 2000, 'success');
+      toast('Tiếp tục từ vị trí đã lưu', 2000, 'success');
     }
   });
   // Nâng cấp: Xóa tiến độ khi xem hết
