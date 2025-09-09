@@ -141,10 +141,10 @@
       .search{min-width:0;width:100%}
       .search .btn{padding:8px 10px}
     }
-    .tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+    .tabs{display:flex;gap:12px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none;justify-content:center;align-items:center;flex-wrap:wrap;} /* Mod: Tăng gap lên 12px cho cân đối, justify-content:center để cân bằng giữa brand và search, flex-wrap để tránh overflow xấu trên mobile */
     .tabs::-webkit-scrollbar{display:none}
-    .tab{padding:8px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.04); /* Giảm opacity viền */
-      background:rgba(255,255,255,.05);color:#e5e7eb;white-space:nowrap;cursor:pointer;touch-action:manipulation;flex:0 0 auto;transition:background .2s ease}
+    .tab{padding:10px 16px;border-radius:999px;border:none; /* Mod: Bỏ viền ngoài cho tự nhiên hơn, giống RoPhim */
+      background:rgba(255,255,255,.05);color:#e5e7eb;white-space:nowrap;cursor:pointer;touch-action:manipulation;flex:0 0 auto;transition:background .2s ease;font-weight:600;letter-spacing:0.2px;} /* Mod: Tăng padding, font-weight 600 cho chữ chắc chắn hơn, letter-spacing nhẹ cho form chữ đẹp */
     .tab.active{background:linear-gradient(135deg,#2563eb,#7c3aed);border-color:transparent;box-shadow:0 6px 18px rgba(124,58,237,.25)}
 
     /* ===== Chips ===== */
@@ -523,6 +523,9 @@
         font-size: 9px;
         padding: 3px 5px;
       }
+      /* Mod cho mobile tabs: Tăng gap và center */
+      .tabs {gap: 8px; justify-content: center; padding: 8px 0;}
+      .tab {padding: 8px 12px; font-size: 14px;}
     }
 
     /* Nâng cấp mới: Thêm shadow cho tabs khi active */
