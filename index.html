@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>ONFLIX • XEM PHIM MỚI MỖI NGÀY</title>
+<head>
+    <title>ONFLIX - XEM PHIM MỚI MỖI NGÀY</title>
+    <link rel="icon" type="image/x-icon" href="https://i.postimg.cc/gjYF62Nm/Black-White-Modern-Grunge-Typographic-Brand-Logo-1.png/favicon.ico">
+</head>
 <meta name="description" content="Duyệt & xem thông tin phim mượt. Dữ liệu từ phimapi.com." />
 <meta name="theme-color" content="#0b1020" />
 <meta name="google-adsense-account" content="ca-pub-8744156112162890">
@@ -100,15 +101,22 @@ input,button,select,textarea{font:inherit;-webkit-appearance:none}
 }
 .brand{display:flex;align-items:center;gap:10px;cursor:pointer;position:relative}
 .brand__logo{
-  width:28px;height:28px;border-radius:8px;display:grid;place-items:center;
-  background:conic-gradient(from 210deg at 50% 50%,#a78bfa 0 40%,#60a5fa 40% 72%,#34d399 72% 100%);
-  color:#0b1020;font-weight:900;box-shadow:0 6px 16px rgba(124,58,237,.35);
+  width:28px;height:28px;border-radius:50%; /* Nâng cấp: Làm tròn thành circle để giống logo trong ảnh */
+  display:grid;place-items:center;
+  background:linear-gradient(180deg,#b91c1c,#7f1d1d); /* Giữ gradient đỏ */
+  color:#fff; /* Màu chữ trắng */
+  font-weight:900;
+  box-shadow:0 6px 18px rgba(239,68,68,.28); /* Shadow đỏ */
   position:relative;overflow:hidden;
+  border:1px solid rgba(255,255,255,.12); /* Viền trắng mờ */
+  /* Nâng cấp: Loại bỏ ::after animation để logo rõ ràng, không bị overlay, giống ảnh đơn giản màu đỏ */
 }
 .brand__logo::after{
-  content:"";position:absolute;inset:-2px;border-radius:8px;
-  background:conic-gradient(from 0deg,#60a5fa,#a78bfa,#34d399,#60a5fa);
-  mix-blend-mode:overlay;animation:spin 8s linear infinite;opacity:.6
+  /* content:"";position:absolute;inset:-2px;border-radius:50%; */
+  /* background:conic-gradient(from 0deg,#60a5fa,#a78bfa,#34d399,#60a5fa); */
+  /* mix-blend-mode:overlay;animation:spin 8s linear infinite;opacity:.6 */
+  /* Tắt animation để logo đỏ rõ nét */
+  display: none;
 }
 @keyframes spin{to{transform:rotate(360deg)}}
 .brand__t{
@@ -498,7 +506,7 @@ footer a{color:#93c5fd}
 <header class="hdr">
   <div class="hdr__row container">
     <div class="brand" id="homeBtn" title="Về Trang chủ" aria-label="Về Trang chủ">
-      <div class="brand__logo">★</div>
+      <div class="brand__logo">★</div> <!-- Logo đỏ rõ nét, không animation overlay -->
       <div class="brand__t">ONFLIX</div>
     </div>
     <nav class="tabs" id="tabs" aria-label="Điều h��ớng">
@@ -750,7 +758,7 @@ footer a{color:#93c5fd}
     <p>© 2025 THANHPHAT</p>
 
     <div class="footer-badge" role="note" aria-label="Hoàng Sa &amp; Trường Sa là của Việt Nam!">
-      <span class="star" aria-hidden="true">★</span>
+      <span class="star" aria-hidden="true">★</span> <!-- Giữ nguyên footer-badge để so sánh -->
       <span>Hoàng Sa &amp; Trường Sa là của Việt Nam!</span>
     </div>
   </div>
