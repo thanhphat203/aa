@@ -541,33 +541,178 @@
       * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
     }
     </style>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8744156112162890" crossorigin="anonymous"></script>
 </head>
 <body>
 
 <!-- Nâng cấp: Thêm layer particles -->
 <div id="particles"></div>
 
-<header class="hdr">
+<!-- ===== HEADER — Minimal, professional, mobile-first ===== -->
+<style>
+  :root{
+    --surface:#0f1426;
+    --line:rgba(255,255,255,.10);
+    --text:#eaf0ff;
+    --muted:#9aa4b5;
+    --accent:#3b82f6;
+    --container:1280px;
+  }
+  .container{max-width:var(--container);margin:0 auto;padding:0 12px}
+
+  .hdr{
+    position:fixed; inset:0 0 auto 0; z-index:2000;
+    background:var(--surface);
+    border-bottom:1px solid var(--line);
+    padding-top:env(safe-area-inset-top,0px);
+  }
+  .hdr__row{
+    display:grid; align-items:center; gap:10px;
+    grid-template-columns:auto 1fr auto; /* brand | search | burger/none */
+    padding:10px 12px;
+  }
+
+  /* Brand */
+  .brand{display:flex;align-items:center;gap:10px;cursor:pointer;min-width:0}
+  .brand__logo{
+    width:28px;height:28px;border-radius:50%;
+    display:grid;place-items:center;font-weight:900;color:#fff;background:#b91c1c;
+    flex:0 0 auto;
+  }
+  .brand__t{
+    font-weight:800; letter-spacing:.2px; color:#fff; white-space:nowrap;
+    font-size:clamp(14px,3.4vw,16px);
+  }
+
+  /* Search */
+  .search{
+    position:relative; display:flex; align-items:center;
+    height:40px; border:1px solid var(--line); border-radius:12px;
+    background:rgba(255,255,255,.06);
+  }
+  .search input{
+    width:100%; height:100%;
+    background:transparent; border:0; outline:0;
+    color:var(--text); padding:0 14px; padding-right:58px; /* chừa chỗ nút */
+    font:inherit;
+  }
+  .search input::placeholder{color:var(--muted)}
+  .search .btn{
+    position:absolute; right:6px; top:6px; bottom:6px;
+    border:0; border-radius:10px; padding:0 12px; cursor:pointer;
+    font-weight:700; color:#fff; background:#334155;
+  }
+
+  /* Menu (burger) */
+  .nav-toggle{
+    appearance:none; border:1px solid var(--line);
+    background:rgba(255,255,255,.04); color:var(--text);
+    width:40px;height:40px;border-radius:10px; cursor:pointer;
+    display:inline-grid; place-items:center;
+  }
+  .nav-toggle svg{width:20px;height:20px}
+
+  /* Tabs */
+  .tabs{
+    display:none; gap:8px; overflow-x:auto; scrollbar-width:none;
+    padding:8px 12px 10px; border-top:1px solid var(--line);
+  }
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{
+    padding:8px 12px; border-radius:999px; flex:0 0 auto;
+    border:1px solid var(--line); background:rgba(255,255,255,.04);
+    color:var(--text); white-space:nowrap; cursor:pointer; font-weight:700;
+  }
+  .tab.active{background:#1f2937;border-color:#334155}
+  .tab:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+  /* States */
+  .hdr[data-open="1"] .tabs{display:flex}
+
+  /* Desktop: hiện tabs luôn, ẩn burger */
+  @media (min-width:900px){
+    .nav-toggle{display:none}
+    .tabs{display:flex; border-top:none; padding-top:0}
+  }
+</style>
+
+<header class="hdr" data-open="0">
   <div class="hdr__row container">
+    <!-- Trái: Brand -->
     <div class="brand" id="homeBtn" title="Về Trang chủ" aria-label="Về Trang chủ">
-      <div class="brand__logo">★</div> <!-- Logo đỏ rõ nét, không animation overlay -->
+      <div class="brand__logo">★</div>
       <div class="brand__t">ONFLIX</div>
     </div>
-    <nav class="tabs" id="tabs" aria-label="Điều hướng">
-      <button class="tab active" data-view="home">Trang chủ</button>
-      <button class="tab" data-type="phim-le" data-view="explore">Phim lẻ</button>
-      <button class="tab" data-type="phim-bo" data-view="explore">Phim bộ</button>
-      <button class="tab" data-type="tv-shows" data-view="explore">TV Shows</button>
-      <button class="tab" data-type="hoat-hinh" data-view="explore">Hoạt hình</button>
-      <button class="tab" data-view="fav">Yêu thích</button>
-      <button class="tab" data-view="his">Lịch sử</button>
-    </nav>
+
+    <!-- Giữa: Search (full width) -->
     <div class="search" role="search">
-      <input id="q" placeholder="Tìm phim..." aria-label="Tìm phim">
-      <button id="btnSearch" class="btn btn-pill">Tìm</button>
+      <input id="q" type="search" inputmode="search" placeholder="Tìm phim..." aria-label="Tìm phim" autocomplete="off" enterkeyhint="search">
+      <button id="btnSearch" class="btn">Tìm</button>
     </div>
+
+    <!-- Phải: Burger (mobile) -->
+    <button id="navToggle" class="nav-toggle" aria-label="Mở menu" aria-expanded="false" aria-controls="tabs">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
   </div>
+
+  <!-- Hàng dưới: Tabs / Nav -->
+  <nav class="tabs container" id="tabs" aria-label="Điều hướng">
+    <button class="tab active" data-view="home">Trang chủ</button>
+    <button class="tab" data-type="phim-le" data-view="explore">Phim lẻ</button>
+    <button class="tab" data-type="phim-bo" data-view="explore">Phim bộ</button>
+    <button class="tab" data-type="tv-shows" data-view="explore">TV Shows</button>
+    <button class="tab" data-type="hoat-hinh" data-view="explore">Hoạt hình</button>
+    <button class="tab" data-view="fav">Yêu thích</button>
+    <button class="tab" data-view="his">Lịch sử</button>
+  </nav>
 </header>
+
+<script>
+  // Toggle menu + đồng bộ padding-top theo chiều cao header (kể cả khi tabs mở)
+  (function(){
+    const hdr = document.querySelector('.hdr');
+    const btn = document.getElementById('navToggle');
+
+    if(btn){
+      btn.addEventListener('click', ()=>{
+        const open = hdr.getAttribute('data-open') === '1';
+        hdr.setAttribute('data-open', open ? '0' : '1');
+        btn.setAttribute('aria-expanded', String(!open));
+        syncHeaderPadding();
+      });
+
+      // Đóng khi click ngoài/nhấn Esc
+      document.addEventListener('click', (e)=>{
+        if(hdr.getAttribute('data-open') !== '1') return;
+        if(!e.target.closest('.hdr')){
+          hdr.setAttribute('data-open','0');
+          btn.setAttribute('aria-expanded','false');
+          syncHeaderPadding();
+        }
+      }, {passive:true});
+      document.addEventListener('keydown', (e)=>{
+        if(e.key === 'Escape'){
+          hdr.setAttribute('data-open','0');
+          btn.setAttribute('aria-expanded','false');
+          syncHeaderPadding();
+        }
+      });
+    }
+
+    function syncHeaderPadding(){
+      const h = hdr.offsetHeight || 64;
+      document.body.style.paddingTop = h + 'px';
+    }
+    window.addEventListener('load', syncHeaderPadding, {once:true});
+    window.addEventListener('resize', syncHeaderPadding);
+    new ResizeObserver(syncHeaderPadding).observe(hdr);
+  })();
+</script>
+<!-- ===== /HEADER ===== -->
+
 
 <!-- Nội dung trang giữ nguyên như cũ -->
 <section id="home" class="container">
@@ -715,144 +860,144 @@
   <div id="hisGrid" class="grid"></div>
 </section>
 
-<!-- POPUP -->
-<div id="popup" class="popup" role="dialog" aria-modal="true">
-  <span class="close" id="close" title="Đóng (Esc)">✕</span>
+  <!-- POPUP -->
+  <div id="popup" class="popup" role="dialog" aria-modal="true">
+    <span class="close" id="close" title="Đóng (Esc)">✕</span>
 
-  <div class="popup-content">
-    <div class="detail-hero">
-      <div class="bg" id="dBg"></div>
-      <div class="overlay"></div>
-      <div class="inner">
-        <img id="dPoster" src="" alt="Poster" loading="lazy" decoding="async" referrerpolicy="no-referrer">
-        <div class="pi">
-          <h2 class="detail-title" id="dTitle">...</h2>
-          <div class="detail-meta" id="dMeta">...</div>
-          <div class="cta">
-            <button id="btnPlayNow" class="btn">Xem ngay</button>
-            <button id="btnFav" class="btn btn-ghost">+ Lưu</button>
-            <button id="btnShare" class="btn btn-ghost">Chia sẻ</button>
-            <button id="btnReport" class="btn btn-ghost">Báo lỗi</button>
+    <div class="popup-content">
+      <div class="detail-hero">
+        <div class="bg" id="dBg"></div>
+        <div class="overlay"></div>
+        <div class="inner">
+          <img id="dPoster" src="" alt="Poster" loading="lazy" decoding="async" referrerpolicy="no-referrer">
+          <div class="pi">
+            <h2 class="detail-title" id="dTitle">...</h2>
+            <div class="detail-meta" id="dMeta">...</div>
+            <div class="cta">
+              <button id="btnPlayNow" class="btn">Xem ngay</button>
+              <button id="btnFav" class="btn btn-ghost">+ Lưu</button>
+              <button id="btnShare" class="btn btn-ghost">Chia sẻ</button>
+              <button id="btnReport" class="btn btn-ghost">Báo lỗi</button>
 
-            <!-- Vote -->
-            <button id="btnLike" class="btn btn-ghost vote like" title="Thích (1 lần/ngày)">
-              👍 <b id="likeCount">0</b>
-            </button>
-            <button id="btnDislike" class="btn btn-ghost vote dislike" title="Không thích (1 lần/ngày)">
-              👎 <b id="dislikeCount">0</b>
-            </button>
+              <!-- Vote -->
+              <button id="btnLike" class="btn btn-ghost vote like" title="Thích (1 lần/ngày)">
+                👍 <b id="likeCount">0</b>
+              </button>
+              <button id="btnDislike" class="btn btn-ghost vote dislike" title="Không thích (1 lần/ngày)">
+                👎 <b id="dislikeCount">0</b>
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="toolbar" id="playerToolbar" style="display:none">
-      <label>Chất lượng
-        <select id="qualitySelect" aria-label="Chọn chất lượng">
-          <option value="auto">Auto</option>
-        </select>
-      </label>
-      <div class="sep"></div>
-      <label>Tốc độ
-        <select id="speedSelect" aria-label="Tốc độ">
-          <option>0.75</option><option selected>1.0</option>
-          <option>1.25</option><option>1.5</option><option>1.75</option><option>2.0</option>
-        </select>
-      </label>
-      <div class="sep"></div>
-      <label class="switch-label">Tự chuyển tập
-        <label class="switch">
-          <input type="checkbox" id="autoNext" checked>
-          <span class="slider"></span>
+      <div class="toolbar" id="playerToolbar" style="display:none">
+        <label>Chất lượng
+          <select id="qualitySelect" aria-label="Chọn chất lượng">
+            <option value="auto">Auto</option>
+          </select>
         </label>
-      </label>
-      <button class="sub-btn" id="subToggle">Phụ đề</button>
-      <div style="flex:1"></div>
-      <button id="btnReload" class="btn btn-ghost" title="Tải lại nguồn">↻</button>
-      <button id="btnPiP" class="btn btn-ghost" title="Picture-in-Picture">PiP</button>
-      <button id="btnFS" class="btn btn-ghost" title="Toàn màn hình">⤢</button>
-    </div>
+        <div class="sep"></div>
+        <label>Tốc độ
+          <select id="speedSelect" aria-label="Tốc độ">
+            <option>0.75</option><option selected>1.0</option>
+            <option>1.25</option><option>1.5</option><option>1.75</option><option>2.0</option>
+          </select>
+        </label>
+        <div class="sep"></div>
+        <label class="switch-label">Tự chuyển tập
+          <label class="switch">
+            <input type="checkbox" id="autoNext" checked>
+            <span class="slider"></span>
+          </label>
+        </label>
+        <button class="sub-btn" id="subToggle">Phụ đề</button>
+        <div style="flex:1"></div>
+        <button id="btnReload" class="btn btn-ghost" title="Tải lại nguồn">↻</button>
+        <button id="btnPiP" class="btn btn-ghost" title="Picture-in-Picture">PiP</button>
+        <button id="btnFS" class="btn btn-ghost" title="Toàn màn hình">⤢</button>
+      </div>
 
-    <div id="player" class="player">
-      <div class="loading" id="loading"></div>
-    </div>
+      <div id="player" class="player">
+        <div class="loading" id="loading"></div>
+      </div>
 
-    <div class="pb">
-      <div class="pi">
-        <h4>Giới thiệu</h4>
-        <div id="pDesc" class="desc"></div>
-        <button id="pToggle" class="toggle" style="display:none">Xem thêm ▼</button>
+      <div class="pb">
+        <div class="pi">
+          <h4>Giới thiệu</h4>
+          <div id="pDesc" class="desc"></div>
+          <button id="pToggle" class="toggle" style="display:none">Xem thêm ▼</button>
 
-        <h4 style="margin-top:14px">Danh sách tập</h4>
-        <div id="eps" class="eps"></div>
+          <h4 style="margin-top:14px">Danh sách tập</h4>
+          <div id="eps" class="eps"></div>
 
-        <h4 style="margin-top:14px">Diễn viên</h4>
-        <div id="cast" class="cast"></div>
+          <h4 style="margin-top:14px">Diễn viên</h4>
+          <div id="cast" class="cast"></div>
 
-        <h4 style="margin-top:14px">Đề xuất tương tự</h4>
-        <div class="row"><div id="row-similar" class="movie-row"></div></div>
+          <h4 style="margin-top:14px">Đề xuất tương tự</h4>
+          <div class="row"><div id="row-similar" class="movie-row"></div></div>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<footer>
-  <div class="footer-content">
-    <p> PHIM HAY - PHIM MỚI - CHẤT LƯỢNG CẬP NHẬT MỖI NGÀY !</p>
-    <p>© 2025 THANHPHAT</p>
+  <footer>
+    <div class="footer-content">
+      <p> PHIM HAY - PHIM MỚI - CHẤT LƯỢNG CẬP NHẬT MỖI NGÀY !</p>
+      <p>© 2025 THANHPHAT</p>
 
-    <div class="footer-badge" role="note" aria-label="Hoàng Sa &amp; Trường Sa là của Việt Nam!">
-      <span class="star" aria-hidden="true">★</span> <!-- Giữ nguyên footer-badge để so sánh -->
-      <span>Hoàng Sa &amp; Trường Sa là của Việt Nam!</span>
+      <div class="footer-badge" role="note" aria-label="Hoàng Sa &amp; Trường Sa là của Việt Nam!">
+        <span class="star" aria-hidden="true">★</span> <!-- Giữ nguyên footer-badge để so sánh -->
+        <span>Hoàng Sa &amp; Trường Sa là của Việt Nam!</span>
+      </div>
     </div>
-  </div>
-</footer>
+  </footer>
 
-<script>
-/* =============== Header height sync (FIX iPhone) =============== */
-function syncHeaderPadding(){
-  const hdr=document.querySelector('.hdr');
-  if(!hdr) return;
-  const h=hdr.offsetHeight||72;
-  document.body.style.paddingTop = h+'px';
-}
-window.addEventListener('load',()=>{ syncHeaderPadding(); setTimeout(syncHeaderPadding, 200); createParticles(); }, {once:true}); /* Nâng cấp: Tạo particles khi load */
-window.addEventListener('resize', ()=>{ requestAnimationFrame(syncHeaderPadding); },{passive:true});
-window.addEventListener('orientationchange', ()=>{ setTimeout(syncHeaderPadding, 100); });
-new ResizeObserver(syncHeaderPadding).observe(document.querySelector('.hdr'));
-
-/* =============== Nâng cấp: Tạo particles chấm trắng bay =============== */
-function createParticles() {
-  const particlesContainer = document.getElementById('particles');
-  if (!particlesContainer) return;
-  
-  // Số lượng particles (tăng/giảm để điều chỉnh mật độ)
-  const numParticles = 200; // Có thể tăng lên 100 cho nhiều hơn, nhưng giữ mượt
-  
-  for (let i = 0; i < numParticles; i++) {
-    const particle = document.createElement('div');
-    particle.className = 'particle';
-    
-    // Vị trí ngẫu nhiên từ dưới lên
-    particle.style.left = Math.random() * 100 + '%';
-    particle.style.top = '100%'; // Bắt đầu từ dưới màn hình
-    
-    // Kích thước ngẫu nhiên nhỏ
-    const size = Math.random() * 3 + 1;
-    particle.style.width = size + 'px';
-    particle.style.height = size + 'px';
-    
-    // Delay và duration ngẫu nhiên để tạo hiệu ứng bay liên tục
-    particle.style.animationDelay = Math.random() * 30 + 's';
-    particle.style.animationDuration = (Math.random() * 10 + 15) + 's'; // 15-25s để chậm và mượt
-    
-    // Chuyển động ngang nhẹ ngẫu nhiên
-    const translateXEnd = (Math.random() - 0.5) * 200; // -100px đến +100px
-    particle.style.setProperty('--translateX-end', translateXEnd + 'px');
-    
-    particlesContainer.appendChild(particle);
+  <script>
+  /* =============== Header height sync (FIX iPhone) =============== */
+  function syncHeaderPadding(){
+    const hdr=document.querySelector('.hdr');
+    if(!hdr) return;
+    const h=hdr.offsetHeight||72;
+    document.body.style.paddingTop = h+'px';
   }
-}
+  window.addEventListener('load',()=>{ syncHeaderPadding(); setTimeout(syncHeaderPadding, 200); createParticles(); }, {once:true}); /* Nâng cấp: Tạo particles khi load */
+  window.addEventListener('resize', ()=>{ requestAnimationFrame(syncHeaderPadding); },{passive:true});
+  window.addEventListener('orientationchange',()=>{ setTimeout(syncHeaderPadding, 100); });
+  new ResizeObserver(syncHeaderPadding).observe(document.querySelector('.hdr'));
+
+  /* =============== Nâng cấp: Tạo particles chấm trắng bay =============== */
+  function createParticles() {
+    const particlesContainer = document.getElementById('particles');
+    if (!particlesContainer) return;
+    
+    // Số lượng particles (tăng/giảm để điều chỉnh mật độ)
+    const numParticles = 200; // Có thể tăng lên 100 cho nhiều hơn, nhưng giữ mượt
+    
+    for (let i = 0; i < numParticles; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      
+      // Vị trí ngẫu nhiên từ dưới lên
+      particle.style.left = Math.random() * 100 + '%';
+      particle.style.top = '100%'; // Bắt đầu từ dưới màn hình
+      
+      // Kích thước ngẫu nhiên nhỏ
+      const size = Math.random() * 3 + 1;
+      particle.style.width = size + 'px';
+      particle.style.height = size + 'px';
+      
+      // Delay và duration ngẫu nhiên để tạo hiệu ứng bay liên tục
+      particle.style.animationDelay = Math.random() * 30 + 's';
+      particle.style.animationDuration = (Math.random() * 10 + 15) + 's'; // 15-25s để chậm và mượt
+      
+      // Chuyển động ngang nhẹ ngẫu nhiên
+      const translateXEnd = (Math.random() - 0.5) * 200; // -100px đến +100px
+      particle.style.setProperty('--translateX-end', translateXEnd + 'px');
+      
+      particlesContainer.appendChild(particle);
+    }
+  }
 
 // Cập nhật keyframes trong CSS để sử dụng biến (nếu cần, nhưng ở đây dùng inline style cho đơn giản)
 
@@ -1581,7 +1726,7 @@ function createVideo(){
     const saved = localStorage.getItem(progressKey);
     if (saved && parseFloat(saved) < v.duration - 5) { // Không resume nếu gần kết thúc
       v.currentTime = parseFloat(saved);
-      toast('Tiếp tục từ vị trí đã lưu', 2000, 'success');
+      toast('Tiếp tục từ từ vị trí đã lưu', 2000, 'success');
     }
   });
   // Nâng cấp: Xóa tiến độ khi xem hết
