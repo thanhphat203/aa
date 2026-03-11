@@ -9,6 +9,12 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div id="global-loader">
+        <div class="spinner"></div>
+        <div style="color: var(--primary-color); font-weight: bold; margin-top: 10px;">Đang tải dữ liệu...</div>
+    </div>
+
+    <div id="cinema-overlay" onclick="toggleCinemaMode()"></div>
 
     <header id="header">
         <div class="header-top">
@@ -78,11 +84,17 @@
             <div class="back-btn" onclick="goBack()"><i class="fas fa-arrow-left"></i> Quay lại trang trước</div>
             
             <div class="player-container">
+                <div class="player-toolbar">
+                    <button class="btn-tool" onclick="toggleCinemaMode()"><i class="fas fa-lightbulb"></i> Tắt đèn</button>
+                </div>
                 <div class="player-wrapper" id="playerWrapper"></div>
             </div>
             
             <div id="movieDetailContent"></div>
             <div id="episodeSection" class="episode-section"></div>
+
+            <div class="section-header" style="margin-top: 50px; border-color: var(--primary-color);">Có Thể Bạn Sẽ Thích</div>
+            <div class="movie-grid" id="relatedMoviesGrid"></div>
         </div>
     </div>
 
@@ -93,7 +105,7 @@
                 <p class="footer-desc">PhimHay là nền tảng xem phim trực tuyến hoàn toàn miễn phí, mang đến trải nghiệm điện ảnh đỉnh cao với kho phim khổng lồ, chất lượng FHD và tốc độ load cực nhanh. Chúng tôi luôn cập nhật liên tục các bộ phim mới nhất.</p>
             </div>
             <div class="footer-col">
-                <h3>Danh Mục Nổi Bật</h3>
+                <h3>Danh Mục Nổi bật</h3>
                 <a href="#" onclick="loadGrid('v1/api/danh-sach/phim-bo', 'Phim Bộ')">Phim Bộ Mới</a>
                 <a href="#" onclick="loadGrid('v1/api/danh-sach/phim-le', 'Phim Lẻ Mới')">Phim Lẻ Cập Nhật</a>
                 <a href="#" onclick="loadGrid('v1/api/quoc-gia/han-quoc', 'Phim Hàn Quốc')">Phim Hàn Quốc</a>
