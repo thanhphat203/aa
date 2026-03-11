@@ -25,9 +25,9 @@ header.scrolled { background: var(--nav-bg); backdrop-filter: blur(10px); box-sh
 .nav-item:hover { color: var(--primary-color); }
 .nav-item i { font-size: 11px; margin-left: 4px; }
 
-/* Dropdown Desktop */
-.dropdown-menu { position: absolute; top: 100%; left: -20px; background: #1a1c24; padding: 20px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.9); grid-template-columns: repeat(4, 1fr); gap: 12px 25px; min-width: 450px; border: 1px solid rgba(255,255,255,0.05); display: none; }
-.dropdown-item { color: var(--text-muted); font-size: 14px; transition: 0.2s; white-space: nowrap; }
+/* FIX: Dropdown Desktop - Căn lề phải để không bị tràn màn hình */
+.dropdown-menu { position: absolute; top: 100%; right: 0; left: auto; background: #1a1c24; padding: 20px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.9); grid-template-columns: repeat(4, 1fr); gap: 12px 25px; min-width: 450px; border: 1px solid rgba(255,255,255,0.05); display: none; }
+.dropdown-item { color: var(--text-muted); font-size: 14px; transition: 0.2s; white-space: nowrap; padding: 5px 0; display: block;}
 .dropdown-item:hover { color: var(--primary-color); transform: translateX(3px); }
 
 /* Hiệu ứng hiển thị Menu trên máy tính */
@@ -44,7 +44,7 @@ header.scrolled { background: var(--nav-bg); backdrop-filter: blur(10px); box-sh
 
 .main-container { min-height: 80vh; padding-bottom: 50px; }
 
-/* 1. HERO SLIDER DYNAMIC */
+/* HERO SLIDER DYNAMIC */
 .hero-section { position: relative; height: 85vh; width: 100%; overflow: hidden; display: flex; align-items: center; }
 .hero-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center 20%; opacity: 0; transition: opacity 0.8s ease-in-out; z-index: 1; }
 .hero-bg.active { opacity: 1; }
@@ -68,7 +68,7 @@ header.scrolled { background: var(--nav-bg); backdrop-filter: blur(10px); box-sh
 .thumb-item img { width: 100%; height: 100%; object-fit: cover; }
 .thumb-item.active { border-color: var(--primary-color); opacity: 1; transform: scale(1.05); }
 
-/* 2. BẢNG XẾP HẠNG 3 CỘT */
+/* BẢNG XẾP HẠNG 3 CỘT */
 .trending-section { padding: 40px 5%; margin-top: -30px; position: relative; z-index: 10; }
 .trending-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; background: #11131a; padding: 25px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); }
 .trending-col { display: flex; flex-direction: column; }
@@ -96,7 +96,7 @@ header.scrolled { background: var(--nav-bg); backdrop-filter: blur(10px); box-sh
 .bg-c4 { background: linear-gradient(45deg, #006266, #12CBC4); }
 .bg-c5 { background: linear-gradient(45deg, #f39c12, #e67e22); }
 
-/* 3. ROW SLIDERS */
+/* ROW SLIDERS */
 .category-sliders { padding: 0 5%; }
 .category-row { margin-bottom: 40px; }
 .row-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
@@ -136,8 +136,8 @@ header.scrolled { background: var(--nav-bg); backdrop-filter: blur(10px); box-sh
 .back-btn { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 25px; padding: 8px 15px; background: rgba(255,255,255,0.1); border-radius: 20px; color: #fff; cursor: pointer; transition: 0.2s; font-size: 14px; font-weight: 500;}
 .back-btn:hover { background: var(--primary-color); color: #000; }
 
-/* PLAYER VIDEO FIX (Bulletproof) */
-.player-container { width: 100%; max-width: 1000px; margin: 0 auto 40px auto; background: #000; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.9); overflow: hidden; display: none; }
+/* PLAYER VIDEO FIX */
+.player-container { width: 100%; max-width: 1000px; margin: 0 auto 40px auto; background: #000; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.9); overflow: hidden; display: none; transition: 0.3s;}
 .player-wrapper { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; }
 .player-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; background: #000; }
 
@@ -158,9 +158,6 @@ header.scrolled { background: var(--nav-bg); backdrop-filter: blur(10px); box-sh
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-/* =======================================================
-   NÂNG CẤP CHUYÊN NGHIỆP: FOOTER THEO MẪU MỚI
-======================================================== */
 footer { background: #07080b; padding: 60px 5% 20px; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 50px; }
 .footer-container { display: flex; flex-wrap: wrap; gap: 40px; justify-content: space-between; margin-bottom: 40px; max-width: 1200px; margin-left: auto; margin-right: auto;}
 .footer-col { flex: 1; min-width: 200px; }
@@ -175,9 +172,6 @@ footer { background: #07080b; padding: 60px 5% 20px; border-top: 1px solid rgba(
 .footer-col a:hover { color: var(--primary-color); transform: translateX(5px); }
 .footer-bottom { text-align: center; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); color: #555; font-size: 13px; }
 
-/* =======================================================
-   RESPONSIVE MOBILE (FIX LỖI MENU DROPDOWN & ĐỘ CO GIÃN)
-======================================================== */
 @media(max-width: 1024px) {
     .trending-grid { grid-template-columns: 1fr; }
     .hero-title { font-size: 2.8rem; }
@@ -191,60 +185,69 @@ footer { background: #07080b; padding: 60px 5% 20px; border-top: 1px solid rgba(
     .header-right { margin-left: auto; }
     .search-box { width: 100%; max-width: 180px;}
     .search-box input { width: 100%; padding: 6px 10px; font-size: 13px;}
-    
-    /* Cho phép cuộn ngang thanh menu */
     .nav-links { width: 100%; margin-left: 0; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 5px; gap: 20px;}
     .nav-links::-webkit-scrollbar { display: none; }
-
-    /* FIX LỖI DROPDOWN MOBILE: HIỂN THỊ FULL MÀN HÌNH */
-    .dropdown-menu {
-        position: fixed;
-        top: 110px; /* Nằm ngay dưới header mobile */
-        left: 0;
-        width: 100vw;
-        max-height: 60vh;
-        overflow-y: auto;
-        background: rgba(15, 17, 21, 0.98);
-        backdrop-filter: blur(15px);
-        grid-template-columns: repeat(2, 1fr); /* 2 cột trên đt */
-        padding: 20px;
-        border-radius: 0 0 15px 15px;
-        z-index: 2000;
-        display: none; 
-        border: none;
-        border-top: 1px solid var(--primary-color);
-    }
-    .dropdown-menu.show-mobile { 
-        display: grid !important; 
-        animation: slideDown 0.3s ease; 
-    }
+    .dropdown-menu { position: fixed; top: 110px; left: 0; width: 100vw; max-height: 60vh; overflow-y: auto; background: rgba(15, 17, 21, 0.98); backdrop-filter: blur(15px); grid-template-columns: repeat(2, 1fr); padding: 20px; border-radius: 0 0 15px 15px; z-index: 2000; display: none; border: none; border-top: 1px solid var(--primary-color); }
+    .dropdown-menu.show-mobile { display: grid !important; animation: slideDown 0.3s ease; }
+    /* FIX: Tăng diện tích chạm trên điện thoại */
+    .dropdown-item { padding: 12px 0; font-size: 15px; } 
     @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-
     .hero-section { height: 60vh; }
     .hero-content { margin-top: 40px; }
     .hero-title { font-size: 1.8rem; }
     .hero-desc { font-size: 13px; -webkit-line-clamp: 2; margin-bottom: 20px;}
     .hero-thumbnails { display: none; } 
     .btn-play, .btn-icon { width: 40px; height: 40px; font-size: 14px;}
-
     .trending-grid { padding: 15px; }
     .movie-card-sm { width: 140px; } 
     .movie-card-sm img { height: 80px; }
     .slider-btn { display: none; } 
     .row-title { font-size: 18px; }
-
     .movie-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
     .movie-card-lg img { height: 180px; }
     .movie-card-lg .card-info { padding: 8px; }
     .movie-card-lg .card-title { font-size: 13px; }
     #grid-view, #detail-view { padding-top: 130px; }
-
     .player-container { border-radius: 8px; margin-bottom: 20px; }
-
     .detail-layout { flex-direction: column; align-items: center; }
     .detail-poster { width: 180px; }
     .detail-info h1 { font-size: 24px; text-align: center; }
     .detail-meta { text-align: center; }
-
     .footer-container { flex-direction: column; gap: 30px; }
 }
+
+/* =======================================================
+   CSS NÂNG CẤP (LOADING & CHẾ ĐỘ RẠP PHIM)
+======================================================== */
+#global-loader {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(11, 12, 16, 0.9); z-index: 9999;
+    display: none; justify-content: center; align-items: center; flex-direction: column;
+}
+.spinner {
+    width: 50px; height: 50px; border: 5px solid rgba(255,255,255,0.1);
+    border-top: 5px solid var(--primary-color); border-radius: 50%;
+    animation: spin 1s linear infinite; margin-bottom: 15px;
+}
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+#cinema-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.95); z-index: 1500;
+    display: none; transition: 0.3s;
+}
+body.cinema-mode #cinema-overlay { display: block; }
+body.cinema-mode header { display: none; }
+body.cinema-mode .player-container { 
+    position: relative; z-index: 2000; box-shadow: 0 0 50px rgba(246, 199, 0, 0.3);
+}
+.player-toolbar { 
+    background: #111; padding: 10px 15px; display: flex; justify-content: flex-end;
+    border-bottom: 1px solid #222;
+}
+.btn-tool {
+    background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.2);
+    padding: 6px 15px; border-radius: 4px; cursor: pointer; transition: 0.2s; font-size: 13px;
+    display: flex; align-items: center; gap: 8px;
+}
+.btn-tool:hover { background: var(--primary-color); color: #000; border-color: var(--primary-color); }
