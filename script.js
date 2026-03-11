@@ -13,51 +13,54 @@ window.addEventListener('scroll', () => {
     document.getElementById('header').classList.toggle('scrolled', window.scrollY > 10);
 });
 
-// Xử lý bật/tắt Dropdown trên Mobile cực chuẩn
+/* --- HIỆU ỨNG LOADING & CINEMA MODE --- */
+function showLoader() { /* Đã tắt hiệu ứng loading */ }
+function hideLoader() { /* Đã tắt hiệu ứng loading */ }
+function toggleCinemaMode() { document.body.classList.toggle('cinema-mode'); }
+
+// FIX: Xử lý bật/tắt Dropdown trên Mobile cực chuẩn (ngăn lỗi không click được)
 function toggleMobileMenu(event, menuId) {
-    // Chỉ chạy logic click này nếu là màn hình nhỏ (Mobile/Tablet)
     if(window.innerWidth <= 768) {
-        event.stopPropagation(); // Ngăn chặn sự kiện nổi bọt
+        // NGĂN CHẶN LỖI: Bỏ qua lệnh đóng menu nếu người dùng đang click vào một mục con (thể loại/quốc gia) bên trong menu
+        if (event.target.closest('.dropdown-menu')) return;
+
+        event.stopPropagation();
         const targetMenu = document.getElementById(menuId);
-        
-        // Nếu menu này đang mở -> Đóng nó
         if(targetMenu.classList.contains('show-mobile')) {
             targetMenu.classList.remove('show-mobile');
         } else {
-            // Đóng tất cả menu khác trước
             document.querySelectorAll('.dropdown-menu').forEach(menu => {
                 menu.classList.remove('show-mobile');
             });
-            // Mở menu được click
             targetMenu.classList.add('show-mobile');
         }
     }
 }
 
-// Click ra ngoài thì đóng Dropdown Mobile
+// FIX: Hàm đóng toàn bộ menu (gọi khi đã click chọn xong 1 thể loại trên mobile)
+function closeAllMenus() {
+    document.querySelectorAll('.dropdown-menu').forEach(menu => menu.classList.remove('show-mobile'));
+}
+
 document.addEventListener('click', (event) => {
     if(window.innerWidth <= 768) {
         if (!event.target.closest('.nav-dropdown')) {
-            document.querySelectorAll('.dropdown-menu').forEach(menu => {
-                menu.classList.remove('show-mobile');
-            });
+            closeAllMenus();
         }
     }
 });
-
 
 function switchView(viewName) {
     document.getElementById('home-view').style.display = viewName === 'home' ? 'block' : 'none';
     document.getElementById('grid-view').style.display = viewName === 'grid' ? 'block' : 'none';
     document.getElementById('detail-view').style.display = viewName === 'detail' ? 'block' : 'none';
     
-    // Đóng dropdown nếu chuyển trang
-    document.querySelectorAll('.dropdown-menu').forEach(menu => menu.classList.remove('show-mobile'));
+    closeAllMenus(); // Tự động đóng menu khi chuyển trang
 
-    // Tắt video khi back ra ngoài
     if(viewName !== 'detail') {
         document.querySelector('.player-container').style.display = 'none';
         document.getElementById('playerWrapper').innerHTML = ''; 
+        document.body.classList.remove('cinema-mode'); // Thoát cinema mode nếu back ra ngoài
     }
     
     if(viewName !== historyView[historyView.length -1]) historyView.push(viewName);
@@ -79,12 +82,13 @@ async function initApp() {
             fetch(`${API_BASE}/quoc-gia`).then(r => r.json())
         ]);
         
+        // FIX: Thêm href="javascript:void(0)" và closeAllMenus() để fix lỗi click trên iOS/Mobile
         document.getElementById('genreDropdown').innerHTML = resTL.map(i => 
-            `<a class="dropdown-item" onclick="loadGrid('v1/api/the-loai/${i.slug}', 'Thể loại: ${i.name}')">${i.name}</a>`
+            `<a href="javascript:void(0)" class="dropdown-item" onclick="closeAllMenus(); loadGrid('v1/api/the-loai/${i.slug}', 'Thể loại: ${i.name}')">${i.name}</a>`
         ).join('');
 
         document.getElementById('countryDropdown').innerHTML = resQG.map(i => 
-            `<a class="dropdown-item" onclick="loadGrid('v1/api/quoc-gia/${i.slug}', 'Quốc gia: ${i.name}')">${i.name}</a>`
+            `<a href="javascript:void(0)" class="dropdown-item" onclick="closeAllMenus(); loadGrid('v1/api/quoc-gia/${i.slug}', 'Quốc gia: ${i.name}')">${i.name}</a>`
         ).join('');
         
         renderHotGenres(resTL.slice(0, 5));
@@ -94,12 +98,17 @@ async function initApp() {
 }
 
 async function initHomePage() {
+    showLoader();
     historyView = ['home'];
     switchView('home');
     
     await loadHeroAndTrending();
 
     document.getElementById('homepage-content').innerHTML = '';
+    
+    // TÍNH NĂNG MỚI: Render lịch sử xem trước
+    renderHistoryRow();
+
     const rows = [
         { title: 'Phim Lẻ Mới Nhất', endpoint: 'v1/api/danh-sach/phim-le' },
         { title: 'Phim Bộ Hàn Quốc', endpoint: 'v1/api/quoc-gia/han-quoc' },
@@ -110,6 +119,50 @@ async function initHomePage() {
     for (let row of rows) {
         await renderCategoryRow(row);
     }
+    hideLoader();
+}
+
+/* --- TÍNH NĂNG MỚI: QUẢN LÝ LỊCH SỬ XEM (LOCALSTORAGE) --- */
+function saveWatchHistory(movie) {
+    let history = JSON.parse(localStorage.getItem('phimhay_history')) || [];
+    history = history.filter(m => m.slug !== movie.slug);
+    history.unshift({
+        slug: movie.slug,
+        name: movie.name,
+        thumb_url: movie.thumb_url || movie.poster_url,
+        episode_current: movie.episode_current
+    });
+    if (history.length > 10) history.pop(); // Chỉ lưu 10 phim
+    localStorage.setItem('phimhay_history', JSON.stringify(history));
+}
+
+function renderHistoryRow() {
+    let history = JSON.parse(localStorage.getItem('phimhay_history')) || [];
+    if (history.length === 0) return;
+
+    let cards = history.map(m => `
+        <div class="movie-card-sm" onclick="fetchDetail('${m.slug}')">
+            <div class="badge" style="background: #e74c3c; color:#fff"><i class="fas fa-history"></i> Xem tiếp</div>
+            <img src="${getImg(m.thumb_url)}" loading="lazy">
+            <div class="card-info">
+                <div class="card-title">${m.name}</div>
+                <div class="card-sub">${m.episode_current || ''}</div>
+            </div>
+        </div>
+    `).join('');
+
+    const html = `
+        <div class="category-row">
+            <div class="row-header">
+                <h2 class="row-title" style="border-color:#e74c3c;">Tiếp Tục Xem</h2>
+            </div>
+            <div class="slider-wrapper">
+                <div class="movie-slider" id="slider-history">${cards}</div>
+                <button class="slider-btn" onclick="document.getElementById('slider-history').scrollBy({left: 800, behavior: 'smooth'})"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+    `;
+    document.getElementById('homepage-content').insertAdjacentHTML('beforeend', html);
 }
 
 async function loadHeroAndTrending() {
@@ -272,6 +325,7 @@ function changePage(step) {
 }
 
 async function fetchGridData() {
+    showLoader();
     switchView('grid');
     document.getElementById('movieGrid').innerHTML = '';
     
@@ -302,19 +356,29 @@ async function fetchGridData() {
                 document.getElementById('btnNext').disabled = gridState.page >= gridState.totalPages;
             }
         }
-    } catch (e) {}
+    } catch (e) {
+        console.log("Lỗi load grid:", e);
+    } finally {
+        hideLoader();
+    }
 }
 
 async function fetchDetail(slug) {
+    showLoader();
     switchView('detail');
     document.getElementById('movieDetailContent').innerHTML = '';
     document.getElementById('episodeSection').innerHTML = '';
+    document.getElementById('relatedMoviesGrid').innerHTML = ''; // Reset phim đề cử
 
     try {
         const res = await fetch(`${API_BASE}/phim/${slug}`);
         const data = await res.json();
         if (data.status) {
             const m = data.movie;
+            
+            // Lưu vào lịch sử xem
+            saveWatchHistory(m);
+
             const content = m.content ? m.content.replace(/<[^>]*>?/gm, '') : '';
             
             document.getElementById('movieDetailContent').innerHTML = `
@@ -351,8 +415,32 @@ async function fetchDetail(slug) {
                 // Tự động bấm tập 1
                 document.querySelector('.ep-btn')?.click();
             }
+
+            // LOAD PHIM ĐỀ CỬ THEO THỂ LOẠI
+            if (m.category && m.category.length > 0) {
+                const cateSlug = m.category[0].slug;
+                fetch(`${API_BASE}/v1/api/the-loai/${cateSlug}?limit=12`)
+                    .then(r => r.json())
+                    .then(relData => {
+                        let relItems = relData.data?.items || [];
+                        relItems = relItems.filter(item => item.slug !== slug).slice(0, 12);
+                        document.getElementById('relatedMoviesGrid').innerHTML = relItems.map(item => `
+                            <div class="movie-card-lg" onclick="fetchDetail('${item.slug}')">
+                                <div class="badge">${item.episode_current || 'HD'}</div>
+                                <img src="${getImg(item.poster_url || item.thumb_url)}" loading="lazy">
+                                <div class="card-info">
+                                    <div class="card-title">${item.name}</div>
+                                </div>
+                            </div>
+                        `).join('');
+                    });
+            }
         }
-    } catch(e) {}
+    } catch(e) {
+        console.log("Lỗi load chi tiết:", e);
+    } finally {
+        hideLoader();
+    }
 }
 
 function playVideo(url, btn) {
