@@ -13,11 +13,47 @@ window.addEventListener('scroll', () => {
     document.getElementById('header').classList.toggle('scrolled', window.scrollY > 10);
 });
 
+// Xử lý bật/tắt Dropdown trên Mobile cực chuẩn
+function toggleMobileMenu(event, menuId) {
+    // Chỉ chạy logic click này nếu là màn hình nhỏ (Mobile/Tablet)
+    if(window.innerWidth <= 768) {
+        event.stopPropagation(); // Ngăn chặn sự kiện nổi bọt
+        const targetMenu = document.getElementById(menuId);
+        
+        // Nếu menu này đang mở -> Đóng nó
+        if(targetMenu.classList.contains('show-mobile')) {
+            targetMenu.classList.remove('show-mobile');
+        } else {
+            // Đóng tất cả menu khác trước
+            document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                menu.classList.remove('show-mobile');
+            });
+            // Mở menu được click
+            targetMenu.classList.add('show-mobile');
+        }
+    }
+}
+
+// Click ra ngoài thì đóng Dropdown Mobile
+document.addEventListener('click', (event) => {
+    if(window.innerWidth <= 768) {
+        if (!event.target.closest('.nav-dropdown')) {
+            document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                menu.classList.remove('show-mobile');
+            });
+        }
+    }
+});
+
+
 function switchView(viewName) {
     document.getElementById('home-view').style.display = viewName === 'home' ? 'block' : 'none';
     document.getElementById('grid-view').style.display = viewName === 'grid' ? 'block' : 'none';
     document.getElementById('detail-view').style.display = viewName === 'detail' ? 'block' : 'none';
     
+    // Đóng dropdown nếu chuyển trang
+    document.querySelectorAll('.dropdown-menu').forEach(menu => menu.classList.remove('show-mobile'));
+
     // Tắt video khi back ra ngoài
     if(viewName !== 'detail') {
         document.querySelector('.player-container').style.display = 'none';
@@ -319,22 +355,16 @@ async function fetchDetail(slug) {
     } catch(e) {}
 }
 
-// HÀM PLAY VIDEO FIXED DÀNH CHO MOBILE
 function playVideo(url, btn) {
     document.querySelectorAll('.ep-btn').forEach(b => b.classList.remove('active'));
     if(btn) btn.classList.add('active');
     
-    // Tìm container bao bọc ngoài cùng (đã fix ở CSS)
     const container = document.querySelector('.player-container');
     const wrapper = document.getElementById('playerWrapper');
     
-    // Clear trắng bóc iframe cũ
     wrapper.innerHTML = ''; 
-    
-    // Tạo iframe mới tinh khôi
     const iframe = document.createElement('iframe');
     
-    // Loại bỏ hoàn toàn sandbox để quảng cáo/script của bên thứ 3 chạy bình thường không bị đứng hình
     iframe.setAttribute('allowfullscreen', 'true');
     iframe.setAttribute('webkitallowfullscreen', 'true');
     iframe.setAttribute('mozallowfullscreen', 'true');
@@ -346,7 +376,6 @@ function playVideo(url, btn) {
     wrapper.appendChild(iframe);
     container.style.display = 'block';
     
-    // Cuộn mượt lên vị trí video
     setTimeout(() => {
         container.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }, 100);
