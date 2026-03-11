@@ -25,10 +25,15 @@ header.scrolled { background: var(--nav-bg); backdrop-filter: blur(10px); box-sh
 .nav-item:hover { color: var(--primary-color); }
 .nav-item i { font-size: 11px; margin-left: 4px; }
 
-.dropdown-menu { display: none; position: absolute; top: 100%; left: -20px; background: #1a1c24; padding: 20px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.9); grid-template-columns: repeat(4, 1fr); gap: 12px 25px; min-width: 450px; border: 1px solid rgba(255,255,255,0.05); }
-.nav-dropdown:hover .dropdown-menu { display: grid; animation: fadeIn 0.3s ease; }
+/* Dropdown Desktop */
+.dropdown-menu { position: absolute; top: 100%; left: -20px; background: #1a1c24; padding: 20px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.9); grid-template-columns: repeat(4, 1fr); gap: 12px 25px; min-width: 450px; border: 1px solid rgba(255,255,255,0.05); display: none; }
 .dropdown-item { color: var(--text-muted); font-size: 14px; transition: 0.2s; white-space: nowrap; }
 .dropdown-item:hover { color: var(--primary-color); transform: translateX(3px); }
+
+/* Hiệu ứng hiển thị Menu trên máy tính */
+@media(min-width: 769px) {
+    .nav-dropdown:hover .dropdown-menu { display: grid; animation: fadeIn 0.3s ease; }
+}
 
 .header-right { display: flex; align-items: center; gap: 15px; margin-left: 20px;}
 .search-box { display: flex; background: rgba(255,255,255,0.1); border-radius: 20px; overflow: hidden; padding: 2px 5px; border: 1px solid rgba(255,255,255,0.1); transition: 0.3s; }
@@ -37,7 +42,6 @@ header.scrolled { background: var(--nav-bg); backdrop-filter: blur(10px); box-sh
 .search-box button { background: transparent; border: none; color: var(--text-muted); padding: 8px 12px; cursor: pointer; transition: 0.2s; }
 .search-box button:hover { color: var(--primary-color); }
 
-/* MAIN CONTAINER */
 .main-container { min-height: 80vh; padding-bottom: 50px; }
 
 /* 1. HERO SLIDER DYNAMIC */
@@ -129,41 +133,13 @@ header.scrolled { background: var(--nav-bg); backdrop-filter: blur(10px); box-sh
 .page-btn:hover:not(:disabled) { background: var(--primary-color); color: #000; }
 .page-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-.back-btn { display: inline-block; margin-bottom: 20px; color: var(--text-muted); cursor: pointer; transition: 0.2s; }
-.back-btn:hover { color: var(--primary-color); }
+.back-btn { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 25px; padding: 8px 15px; background: rgba(255,255,255,0.1); border-radius: 20px; color: #fff; cursor: pointer; transition: 0.2s; font-size: 14px; font-weight: 500;}
+.back-btn:hover { background: var(--primary-color); color: #000; }
 
-/* =======================================================
-   PLAYER VIDEO FIX (Bulletproof 16:9 Aspect Ratio)
-======================================================== */
-.player-container {
-    width: 100%;
-    max-width: 1000px;
-    margin: 0 auto 40px auto;
-    background: #000;
-    border-radius: 12px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.9);
-    overflow: hidden;
-    display: none; /* JS sẽ kích hoạt block */
-}
-
-.player-wrapper {
-    position: relative;
-    width: 100%;
-    padding-bottom: 56.25%; /* Đây là tỷ lệ vàng 16:9 chống sập khung hình mọi điện thoại */
-    height: 0;
-}
-
-.player-wrapper iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: none;
-    background: #000;
-}
-
-/* ======================================================= */
+/* PLAYER VIDEO FIX (Bulletproof) */
+.player-container { width: 100%; max-width: 1000px; margin: 0 auto 40px auto; background: #000; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.9); overflow: hidden; display: none; }
+.player-wrapper { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; }
+.player-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; background: #000; }
 
 .detail-layout { display: flex; gap: 40px; flex-wrap: wrap; background: var(--card-bg); padding: 30px; border-radius: 12px; }
 .detail-poster { width: 280px; border-radius: 10px; box-shadow: 0 10px 20px rgba(0,0,0,0.6); }
@@ -179,13 +155,28 @@ header.scrolled { background: var(--nav-bg); backdrop-filter: blur(10px); box-sh
 .ep-btn { background: #222; color: #fff; border: 1px solid #333; padding: 10px 18px; border-radius: 6px; cursor: pointer; transition: 0.2s; font-size: 14px; }
 .ep-btn:hover, .ep-btn.active { background: var(--primary-color); color: #000; border-color: var(--primary-color); font-weight: bold; }
 
-footer { text-align: center; padding: 30px; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 50px; color: var(--text-muted); font-size: 14px; }
-
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
 /* =======================================================
-   RESPONSIVE CHO MÁY TÍNH BẢNG & ĐIỆN THOẠI 
+   NÂNG CẤP CHUYÊN NGHIỆP: FOOTER THEO MẪU MỚI
+======================================================== */
+footer { background: #07080b; padding: 60px 5% 20px; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 50px; }
+.footer-container { display: flex; flex-wrap: wrap; gap: 40px; justify-content: space-between; margin-bottom: 40px; max-width: 1200px; margin-left: auto; margin-right: auto;}
+.footer-col { flex: 1; min-width: 200px; }
+.brand-col { flex: 2; min-width: 300px; }
+.footer-logo { font-size: 28px; color: var(--primary-color); margin-bottom: 15px; display: flex; align-items: center; gap: 8px;}
+.footer-desc { color: var(--text-muted); line-height: 1.6; font-size: 14px; margin-bottom: 20px; max-width: 400px;}
+.social-links { display: flex; gap: 15px; }
+.social-links a { display: flex; justify-content: center; align-items: center; width: 36px; height: 36px; background: rgba(255,255,255,0.05); border-radius: 50%; color: #fff; transition: 0.3s; }
+.social-links a:hover { background: var(--primary-color); color: #000; transform: translateY(-3px);}
+.footer-col h3 { color: #fff; font-size: 16px; margin-bottom: 20px; font-weight: 600; }
+.footer-col a { display: block; color: var(--text-muted); margin-bottom: 12px; font-size: 14px; transition: 0.2s; }
+.footer-col a:hover { color: var(--primary-color); transform: translateX(5px); }
+.footer-bottom { text-align: center; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); color: #555; font-size: 13px; }
+
+/* =======================================================
+   RESPONSIVE MOBILE (FIX LỖI MENU DROPDOWN & ĐỘ CO GIÃN)
 ======================================================== */
 @media(max-width: 1024px) {
     .trending-grid { grid-template-columns: 1fr; }
@@ -201,9 +192,33 @@ footer { text-align: center; padding: 30px; border-top: 1px solid rgba(255,255,2
     .search-box { width: 100%; max-width: 180px;}
     .search-box input { width: 100%; padding: 6px 10px; font-size: 13px;}
     
+    /* Cho phép cuộn ngang thanh menu */
     .nav-links { width: 100%; margin-left: 0; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 5px; gap: 20px;}
     .nav-links::-webkit-scrollbar { display: none; }
-    .nav-dropdown { pointer-events: none; opacity: 0.5;} 
+
+    /* FIX LỖI DROPDOWN MOBILE: HIỂN THỊ FULL MÀN HÌNH */
+    .dropdown-menu {
+        position: fixed;
+        top: 110px; /* Nằm ngay dưới header mobile */
+        left: 0;
+        width: 100vw;
+        max-height: 60vh;
+        overflow-y: auto;
+        background: rgba(15, 17, 21, 0.98);
+        backdrop-filter: blur(15px);
+        grid-template-columns: repeat(2, 1fr); /* 2 cột trên đt */
+        padding: 20px;
+        border-radius: 0 0 15px 15px;
+        z-index: 2000;
+        display: none; 
+        border: none;
+        border-top: 1px solid var(--primary-color);
+    }
+    .dropdown-menu.show-mobile { 
+        display: grid !important; 
+        animation: slideDown 0.3s ease; 
+    }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
     .hero-section { height: 60vh; }
     .hero-content { margin-top: 40px; }
@@ -222,15 +237,14 @@ footer { text-align: center; padding: 30px; border-top: 1px solid rgba(255,255,2
     .movie-card-lg img { height: 180px; }
     .movie-card-lg .card-info { padding: 8px; }
     .movie-card-lg .card-title { font-size: 13px; }
-    #grid-view, #detail-view { padding-top: 120px; }
+    #grid-view, #detail-view { padding-top: 130px; }
 
-    .player-container {
-        border-radius: 8px;
-        margin-bottom: 20px;
-    }
+    .player-container { border-radius: 8px; margin-bottom: 20px; }
 
     .detail-layout { flex-direction: column; align-items: center; }
     .detail-poster { width: 180px; }
     .detail-info h1 { font-size: 24px; text-align: center; }
     .detail-meta { text-align: center; }
+
+    .footer-container { flex-direction: column; gap: 30px; }
 }
